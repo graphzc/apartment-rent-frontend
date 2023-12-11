@@ -1,8 +1,11 @@
-import Image from 'next/image'
-import Homes from './Home/page'
+'use client'
 
-export default function Home() {
+import { useRouter } from "next/navigation"
+
+export default function MainPage() {
+  const router = useRouter()
+  router.push('/home')
   return (
-    <Homes></Homes>
+    <div></div>
   )
 }
