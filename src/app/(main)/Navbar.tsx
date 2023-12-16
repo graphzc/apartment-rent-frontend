@@ -1,4 +1,5 @@
 "use client";
+import { UserRole } from "@/enum/UserRole";
 import { Disclosure, Menu, Transition, Dialog } from "@headlessui/react";
 import {
   Bars3Icon,
@@ -17,19 +18,32 @@ import {
   Button,
   Textarea,
 } from "@material-tailwind/react";
+import { signOut, useSession } from "next-auth/react";
+import Link from "next/link";
 
 import { usePathname } from "next/navigation";
 import { Fragment, useRef, useState } from "react";
 
-const navigation = [
+const guestNavigation = [
+  { name: "หน้าหลัก", href: "/home", current: true },
+  { name: "แผนที่", href: "/map", current: false },
+  { name: "ข่าวสาร", href: "/news", current: false },
+  { name: "ติดต่อเรา", href: "/contact", current: false },
+];
+
+const memberNavigation = [
   { name: "หน้าหลัก", href: "/home", current: true },
   { name: "จองห้อง", href: "/reserve", current: false },
   { name: "แผนที่", href: "/map", current: false },
   { name: "ชำระเงิน", href: "/payment", current: false },
-  { name: "สาธารณูโภค", href: "/utilities", current: false },
   { name: "ข่าวสาร", href: "/news", current: false },
   { name: "ติดต่อเรา", href: "/contact", current: false },
 ];
+
+const adminNavigation = [
+  ...memberNavigation,
+  { name: "ระบบจัดการ", href: "/admin/dashboard", current: false },
+]
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -39,9 +53,30 @@ export default function Example() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const cancelButtonRef = useRef(null);
-
+  
   const [chat, setChat] = useState(false);
+  
+  const { data: session, status } = useSession()
+  
+  if (status === 'loading') {
+    return <div className="bg-gray-900 h-16"></div>
+  }
 
+  let navigation = guestNavigation;
+  
+  switch (session?.user?.role) {
+    case UserRole.USER:
+      navigation = memberNavigation;
+      break;
+    case UserRole.ADMIN:
+      navigation = adminNavigation;
+      break;
+    default:
+      navigation = guestNavigation;
+      break;
+  }
+  
+  
   const ChatBox = () => {
     return (
       <div className="relative">
@@ -184,7 +219,7 @@ export default function Example() {
                 <div className="hidden sm:ml-6 sm:block">
                   <div className="flex space-x-4">
                     {navigation.map((item) => (
-                      <a
+                      <Link
                         key={item.name}
                         href={item.href}
                         className={classNames(
@@ -197,12 +232,12 @@ export default function Example() {
                         aria-current={item.current ? "page" : undefined}
                       >
                         {item.name}
-                      </a>
+                      </Link>
                     ))}
                   </div>
                 </div>
               </div>
-              <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+              { status == "authenticated" ? <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                 <button
                   onClick={() => setOpen(true)}
                   type="button"
@@ -244,40 +279,43 @@ export default function Example() {
                               "block px-4 py-2 text-sm text-gray-700"
                             )}
                           >
-                            Your Profile
+                            โปรไฟล์
                           </a>
                         )}
                       </Menu.Item>
                       <Menu.Item>
                         {({ active }) => (
-                          <a
-                            href="#"
+                          <button
+                            onClick={() => signOut()}
                             className={classNames(
                               active ? "bg-gray-100" : "",
-                              "block px-4 py-2 text-sm text-gray-700"
+                              "block px-4 py-2 text-sm text-gray-700 w-full text-left"
                             )}
                           >
-                            Settings
-                          </a>
-                        )}
-                      </Menu.Item>
-                      <Menu.Item>
-                        {({ active }) => (
-                          <a
-                            href="#"
-                            className={classNames(
-                              active ? "bg-gray-100" : "",
-                              "block px-4 py-2 text-sm text-gray-700"
-                            )}
-                          >
-                            Sign out
-                          </a>
+                            ออกจากระบบ
+                          </button>
                         )}
                       </Menu.Item>
                     </Menu.Items>
                   </Transition>
                 </Menu>
+              </div> 
+                : 
+              <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+                <Link 
+                  href="/login" 
+                  className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                >
+                  เข้าสู่ระบบ
+                </Link>
+                <Link
+                  href="/register"
+                  className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                >
+                  สมัครสมาชิก
+                </Link>
               </div>
+              }
             </div>
           </div>
 

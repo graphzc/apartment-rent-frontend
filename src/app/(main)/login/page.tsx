@@ -1,21 +1,17 @@
 'use client'
 
+import LoginSchema from "@/interface/LoginSchema"
 import { errorAlert } from "@/lib/sweetAlert"
 import { signIn } from "next-auth/react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 
-interface ILoginInput {
-    email: string
-    password: string
-}
-
 export default function LoginPage() {
-    const { register, handleSubmit, formState: { errors, isSubmitSuccessful } } = useForm<ILoginInput>();
+    const { register, handleSubmit, formState: { errors, isSubmitSuccessful } } = useForm<LoginSchema>();
     const router = useRouter();
 
-    const handleLogin = async (data: ILoginInput) => {
+    const handleLogin = async (data: LoginSchema) => {
         signIn('credentials', {
             email: data.email,
             password: data.password,
