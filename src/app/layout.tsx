@@ -1,7 +1,9 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter, Kanit, Mitr, Noto_Sans_Thai, IBM_Plex_Sans_Thai, Prompt, Itim, Krub } from "next/font/google";
-import Navbar from "./Navbar";
+import Navbar from "./(main)/Navbar";
+import NextAuthProvider from "@/provider/NextAuthProvider";
+import QueryClientProvider from "@/provider/QueryClientProvider";
 
 const fonts = Prompt({
   subsets: ["latin"],
@@ -23,8 +25,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={fonts.className}>
-        <Navbar />
-        {children}
+        <NextAuthProvider>
+          <QueryClientProvider>
+            {children}
+          </QueryClientProvider>
+        </NextAuthProvider>
       </body>
     </html>
   );
