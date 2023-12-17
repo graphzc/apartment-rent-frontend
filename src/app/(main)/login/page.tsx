@@ -6,26 +6,28 @@ import { signIn } from "next-auth/react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
+import { useState } from "react"
 
 export default function LoginPage() {
-    const { register, handleSubmit, formState: { errors, isSubmitSuccessful } } = useForm<LoginSchema>();
+    const { register, handleSubmit, formState: { errors, isSubmitSuccessful, isSubmitting }, resetField } = useForm<LoginSchema>();
     const router = useRouter();
 
     const handleLogin = async (data: LoginSchema) => {
-        signIn('credentials', {
+        await signIn('credentials', {
             email: data.email,
             password: data.password,
             redirect: false,
         }).then((res) => {
             if (res?.ok === true) {
-                router.replace('/');
+                router.replace('/home');
             } else {
                 errorAlert({
                     title: 'Login failed',
                     text: 'Invalid username or password',
                 });
+                resetField('password');
             }
-        }).catch((err) => {
+        }).catch(() => {
             errorAlert({
                 title: 'Login failed',
                 text: 'Server error please try again later',
@@ -50,8 +52,7 @@ export default function LoginPage() {
                                     <input
                                         className="w-full px-4 py-3 text-sm text-gray-700 border rounded appearance-none focus:outline-none focus:shadow-outline"
                                         id="email"
-                                        type="email"
-                                        placeholder="mail@example.com"
+                                        type="text"
                                         { ...register("email", { required: true }) }
                                     />
                                 </div>
@@ -63,16 +64,16 @@ export default function LoginPage() {
                                         className="w-full px-4 py-3 mb-3 text-sm  text-gray-700 border rounded appearance-none focus:outline-none focus:shadow-outline"
                                         id="password"
                                         type="password"
-                                        placeholder="******************"
                                         { ...register("password", { required: true }) }
                                     />
                                 </div>
                                 <div className="mb-6 text-center">
                                     <button
-                                        className="w-full px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+                                        className="w-full px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline disabled:opacity-50" 
                                         type="submit"
+                                        disabled={isSubmitting}
                                     >
-                                        เข้าสู่ระบบ
+                                        { isSubmitting ? 'กำลังเข้าสู่ระบบ...' : 'เข้าสู่ระบบ' }
                                     </button>
                                 </div>
                                 <hr className="mb-6 border-t" />
