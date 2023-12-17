@@ -26,38 +26,33 @@ const formSchema = yup.object({
 type FormSchema = yup.InferType<typeof formSchema>
 
 export default function RegisterPage() {
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    const {register, handleSubmit, formState: { errors, isSubmitSuccessful }} = useForm({
+    const {register, handleSubmit, formState: { errors, isSubmitting }} = useForm({
         resolver: yupResolver(formSchema),
     })
     const registerMutation = useRegister();
     const router = useRouter();
 
     const handleRegister = async (data: FormSchema) => {
-        registerMutation.mutate(data);
-        setIsLoading(true);
-        if (isSubmitSuccessful) {
-            await signIn('credentials', {
-                email: data.email,
-                password: data.password,
-                redirect: false,
-            }).then((res) => {
-                if (res?.ok === true) {
-                    router.replace('/');
-                } else {
-                    errorAlert({
-                        title: 'Login failed',
-                        text: 'Invalid username or password',
-                    });
-                }
-            }).catch((err) => {
+        await registerMutation.mutateAsync(data);
+        await signIn('credentials', {
+            email: data.email,
+            password: data.password,
+            redirect: false,
+        }).then((res) => {
+            if (res?.ok === true) {
+                router.replace('/home');
+            } else {
                 errorAlert({
-                    title: 'Login failed',
-                    text: 'Server error please try again later',
+                    title: 'เข้าสู่ระบบล้มเหลว',
+                    text: 'อีเมลหรือรหัสผ่านไม่ถูกต้อง'
                 });
+            }
+        }).catch(() => {
+            errorAlert({
+                title: 'Login failed',
+                text: 'Server error please try again later',
             });
-        }
-        setIsLoading(false);
+        });
     }
 
     return (
@@ -104,7 +99,6 @@ export default function RegisterPage() {
                                         className="w-full px-4 py-3 text-sm text-gray-700 border rounded appearance-none focus:outline-none focus:shadow-outline"
                                         id="password"
                                         type="password"
-                                        placeholder="******************"
                                         { ...register("password", { required: true }) }
                                     />
                                     {errors.password && <p className="text-red-500">{errors?.password?.message}</p>}
@@ -117,21 +111,20 @@ export default function RegisterPage() {
                                         className="w-full px-4 py-3 text-sm text-gray-700 border rounded appearance-none focus:outline-none focus:shadow-outline"
                                         id="confirm-password"
                                         type="password"
-                                        placeholder="******************"
                                         { ...register("confirmPassword", { required: true }) }
                                     />
                                     {errors.confirmPassword && <p className="text-red-500">{errors?.confirmPassword?.message}</p>}
                                 </div>
                                 <div className="mb-6 text-center">
                                     <button
-                                        className={ `w-full px-4 py-2 font-bold text-white  
+                                        className="w-full px-4 py-2 font-bold text-white  
                                                     rounded-full  focus:outline-none focus:shadow-outline 
-                                                    ${isLoading ? 'opacity-50 cursor-not-allowed bg-blue-200' : 'opacity-100 cursor-pointer bg-blue-500 hover:bg-blue-700'}
-                                                    ` }
+                                                    disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-blue-200 opacity-100 cursor-pointer bg-blue-500 hover:bg-blue-700
+                                                "
+                                        disabled={isSubmitting}
                                         type="submit"
-                                        
                                     >
-                                        สมัครสมาชิก
+                                        { isSubmitting ? 'กำลังสมัครสมาชิก...' : 'สมัครสมาชิก' }
                                     </button>
                                 </div>
                                 <hr className="mb-6 border-t" />
