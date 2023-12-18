@@ -5,7 +5,6 @@ import { signOut, useSession } from 'next-auth/react';
 import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Profile from './Profile';
-// import Logo from 'public/imgs/poolworld-logo.png';
 
 interface NavbarItemProps {
     href: string;
@@ -32,7 +31,6 @@ export default function Navbar() {
     const { data: session, status } = useSession();
     
     const pathname = usePathname();
-    const router = useRouter();
 
     return (
         <nav className='bg-white h-screen border-r py-5 px-3 border-gray-200 sticky top-0 col-span-1 self-start'>
@@ -64,8 +62,7 @@ export default function Navbar() {
                     <button
                         className="block w-full text-left py-2 px-4 mb-2 rounded-lg text-white hover:bg-red-500 bg-red-600"
                         onClick={async () => {
-                            await signOut()
-                            router.replace('/home')
+                            await signOut({ callbackUrl: '/home' })
                         }}
                     >
                         ออกจากระบบ
