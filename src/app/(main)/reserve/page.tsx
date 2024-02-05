@@ -9,6 +9,7 @@ import {
   useEffect,
 } from "react";
 import { Dialog, Transition } from "@headlessui/react";
+import useApartments from "@/api/apartment/useApartments";
 
 export default function Reserve() {
   const imgs: number[] = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
@@ -18,9 +19,9 @@ export default function Reserve() {
   const [id_list, setList] = useState([""]);
   const cancelButtonRef = useRef(null);
 
-  useEffect(() => { }, [id_list]);
+  const { data: apartments, error } = useApartments();
 
-  const click_reserve = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const clickReserve = (event: React.MouseEvent<HTMLButtonElement>) => {
     setOpen(true);
     setId(event.currentTarget.id);
   };
@@ -76,9 +77,6 @@ export default function Reserve() {
                 <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
                   <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                     <div className="sm:flex sm:items-start">
-                      {/* <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                        <ExclamationTriangleIcon className="h-6 w-6 text-red-600" aria-hidden="true" />
-                      </div> */}
                       <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                         <Dialog.Title
                           as="h3"
@@ -122,57 +120,11 @@ export default function Reserve() {
     );
   };
 
-  const Cards = () => {
-    let html: JSX.Element[] = [];
-    for (let i = 0; i < 60; i++) {
-      if (i % 17 == 0 || i % 27 == 0 || id_list.includes("card" + i)) {
-        html.push(
-          <button
-            id={"card" + i}
-            key={i}
-            className="rounded overflow-hidden shadow-xl mb-2 bg-red-900 text-white"
-            onClick={(event) => click_reserve(event)}
-          >
-            <div className="px-6 py-4 text-center ">
-              <div className="flex justify-center items-center">
-                <HomeIcon className="h-6 w-6 " />
-              </div>
-              <div className="font-bold text-xl my-3">{101 + i}</div>
-              <p id={"card" + i + "p"} className="text-base">
-                ไม่ว่าง
-              </p>
-            </div>
-          </button>
-        );
-      } else {
-        html.push(
-          <button
-            id={"card" + i}
-            key={i}
-            className="rounded overflow-hidden shadow-xl mb-2 bg-gray-100 transition hover:duration-300 hover:scale-105 text-gray-800"
-            onClick={(event) => click_reserve(event)}
-          >
-            <div className="px-6 py-4 text-center">
-              <div className="flex justify-center items-center">
-                <HomeIcon className="h-6 w-6 " />
-              </div>
-              <div className="font-bold text-xl my-3">{101 + i}</div>
-              <p id={"card" + i + "p"} className=" text-base">
-                ห้องว่าง
-              </p>
-            </div>
-          </button>
-        );
-      }
-    }
-    return html;
-  };
-
   return (
     <>
       <Modal />
       <div className="w-100 relative text-center">
-        <img src="/homeAsset/2.jpg" className="object-cover h-96 w-screen " />
+        <img src="/homeAsset/2.jpg" className="object-cover h-96 w-screen "  />
         <div className="h-full w-full top-1/2 absolute -translate-y-1/2 p-8 bg-gradient-to-r from-gray-900 via-gray-900/70 to-gray-900/0 text-center ">
           <div className="text-5xl font-bold text-white mt-36">จองห้องพัก</div>
         </div>
@@ -181,10 +133,43 @@ export default function Reserve() {
         <div className="text-3xl font-bold my-10 text-black text-center sm:text-left">
           ห้องพักทั้งหมด
         </div>
+        { 
+          apartments?.map((apartment, i) => {
+            return (
+              <>
+                <h3 className="text-xl mb-5">
+                  อพาทเมนต์: { apartment.name }
+                </h3>
+                <div className="grid 2xl:grid-cols-6 lg:grid-cols-5 sm:grid-cols-4 sm:gap-7 gap-5 grid-cols-2 px-5">
+                  { apartment.room?.map((room, j) => {
+                    return (
+                      <>
+                        <button
+                          id={"card" + i + j}
+                          key={j}
+                          className="rounded overflow-hidden shadow-xl mb-2 bg-red-900 text-white"
+                          onClick={(event) => clickReserve(event)}
+                        >
+                          <div className="px-6 py-4 text-center ">
+                            <div className="flex justify-center items-center">
+                              <HomeIcon className="h-6 w-6 " />
+                            </div>
 
-        <div className="grid 2xl:grid-cols-6 lg:grid-cols-5 sm:grid-cols-4 sm:gap-7 gap-5 grid-cols-2 px-5">
-          <Cards />
-        </div>
+                            <div className="font-bold text-xl my-3">{room.no}</div>
+                            <p id={"card" + i + j + "p"} className=" text-base">
+                              ห้องว่าง
+                            </p>
+                          </div>
+                        </button>
+                      </>
+                    )
+                  }) }
+                </div>
+
+              </>
+            )
+          }) 
+        }
       </div>
     </>
   );

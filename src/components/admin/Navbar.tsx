@@ -50,13 +50,11 @@ export default function Navbar() {
             </div>
             <div className='flex flex-col justify-between'>
                 <div>
-                    <NavbarItem href="/dashboard" text="แดชบอร์ด" currentPath={pathname} />
-                    {/* { session?.user?.role === EmployeeRole.ADMIN && <NavbarItem href="/employee" text="พนักงาน" currentPath={pathname} />} */}
-                    
-                    <NavbarItem href="#" text="ลูกค้า" currentPath={pathname} />
-                    <NavbarItem href="#" text="อพาทเมนต์" currentPath={pathname} />
-                    <NavbarItem href="#" text="ห้อง" currentPath={pathname} />
-                    <NavbarItem href="#" text="การเช่า" currentPath={pathname} />
+                    <NavbarItem href="/admin/dashboard" text="แดชบอร์ด" currentPath={pathname} />
+                    <NavbarItem href="/admin/customer" text="ลูกค้า" currentPath={pathname} />
+                    <NavbarItem href="/admin/apartment" text="อพาทเมนต์" currentPath={pathname} />
+                    <NavbarItem href="/admin/room" text="ห้อง" currentPath={pathname} />
+                    <NavbarItem href="/apartment/rent" text="การเช่า" currentPath={pathname} />
                 </div>
                 <div className="w-full">
                     <button
