@@ -1,12 +1,12 @@
 import MySwal, { warningAlert } from "@/lib/sweetAlert";
 
-interface DeleteButtonProps {
-    id: string;
-    handleDelete: (id: string) => void;
+interface DeleteButtonProps<T> {
+    id: T;
+    handleDelete: (id: T) => void;
 };
 
-export default function DeleteButton({ id, handleDelete }:  DeleteButtonProps) {
-    const deleteConfirm = (id: string) => {
+export default function DeleteButton<T>({ id, handleDelete }:  DeleteButtonProps<T>) {
+    const deleteConfirm = (id: T) => {
         warningAlert({
             // Generate delete message in th
             title: "คุณต้องการอพาร์ทเม้นท์ลบ?",

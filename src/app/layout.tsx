@@ -5,11 +5,11 @@ import Navbar from "./(main)/Navbar";
 import NextAuthProvider from "@/provider/NextAuthProvider";
 import QueryClientProvider from "@/provider/QueryClientProvider";
 
-const fonts = Prompt({
-  subsets: ["latin"],
-  weight: "400",
-  display: "swap",
-  style: "normal"
+const prompt = Prompt({
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  preload: true,
+  style: "normal",
+  subsets: ["latin-ext", "thai"],
 });
 
 export const metadata: Metadata = {
@@ -24,7 +24,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={fonts.className}>
+      <body className={prompt.className}>
         <NextAuthProvider>
           <QueryClientProvider>
             {children}

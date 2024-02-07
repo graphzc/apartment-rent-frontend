@@ -35,12 +35,6 @@ export default function Navbar() {
     return (
         <nav className='bg-white h-screen border-r py-5 px-3 border-gray-200 sticky top-0 col-span-1 self-start'>
             <div className='font-bold text-center text-lg pb-3 flex justify-center gap-2'>
-                {/* <Image 
-                    src={Logo}
-                    width={30}
-                    height={30}
-                    alt='Poolworld'
-                /> */}
                 <div>
                     ซ้งศรีเจริญ
                 </div>
@@ -55,6 +49,7 @@ export default function Navbar() {
                     <NavbarItem href="/admin/apartment" text="อพาทเมนต์" currentPath={pathname} />
                     <NavbarItem href="/admin/room" text="ห้อง" currentPath={pathname} />
                     <NavbarItem href="/apartment/rent" text="การเช่า" currentPath={pathname} />
+                    <NavbarItem href='/admin/payment' text='การชำระเงิน' currentPath={pathname} />
                 </div>
                 <div className="w-full">
                     <button

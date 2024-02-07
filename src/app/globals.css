@@ -15,14 +15,16 @@
     --background-end-rgb: 0, 0, 0;
   }
 }
+
 @layer components {
   .input-primary {
-    @apply block w-full rounded-lg py-2 border-gray-300;
+    @apply block w-full rounded-lg py-2 border-gray-400 border px-2 mt-2;
   }
   .submit-button {
-    @apply bg-blue-500 text-white px-4 mx-4 my-7 py-2 rounded-lg w-full flex justify-center;
+    @apply bg-blue-500 text-white px-4 py-2 rounded-lg w-full flex justify-center;
   }
 }
+
 
 body {
   color: rgb(var(--foreground-rgb));

@@ -7,10 +7,13 @@ import ActionButton from "@/components/ActionButton";
 
 export default function RoomDataTable({data} : {data: Room[]}){
     const router = useRouter();
-    const handleDelete = (id: string) => {
+    const handleDelete = (id: number) => {
         router.push(`/admin/room/${id}`)
     }
-    const handleEdit = (id: string) => {
+    const handleEdit = (id: number) => {
+        router.push(`/admin/room/${id}`)
+    }
+    const handleView = (id: number) => {
         router.push(`/admin/room/${id}`)
     }
 
@@ -32,7 +35,7 @@ export default function RoomDataTable({data} : {data: Room[]}){
         },
         {
             name: '',
-            cell: (row: Room) => <ActionButton id={row.id!} handleDelete={handleDelete} handleEdit={handleEdit}/>
+            cell: (row: Room) => <ActionButton<number> id={row.id!} handleDelete={handleDelete} handleEdit={handleEdit} handleView={handleView} />
         },
     ];
     return(

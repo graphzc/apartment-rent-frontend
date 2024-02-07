@@ -8,12 +8,16 @@ import ActionButton from "@/components/ActionButton"
 
 export default function ApartmentDataTable({data} : {data: Apartment[]}){
     const router = useRouter();
-    const handleDelete = (id: string) => {
+    const handleDelete = (id: number) => {
         router.push(`/admin/apartment/${id}`)
     }
-    const handleEdit = (id: string) => {
+    const handleEdit = (id: number) => {
         router.push(`/admin/apartment/${id}`)
     }
+    const handleView = (id: number) => {
+        router.push(`/admin/apartment/${id}`)
+    }
+
     const columns: TableColumn<Apartment>[] = [
         {
             name: 'ID',
@@ -27,7 +31,7 @@ export default function ApartmentDataTable({data} : {data: Apartment[]}){
         },
         {
             name: '',
-            cell: (row: Apartment) => <ActionButton id={row.id!} handleDelete={handleDelete} handleEdit={handleEdit}/>
+            cell: (row: Apartment) => <ActionButton<number> id={row.id!} handleDelete={handleDelete} handleEdit={handleEdit} handleView={handleView} />
         },
     ];
     return(

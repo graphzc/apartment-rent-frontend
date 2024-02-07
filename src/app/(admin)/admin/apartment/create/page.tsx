@@ -2,21 +2,22 @@
 
 import { toast } from "react-toastify";
 import CreateApartmentForm from '@/components/admin/apartment/CreateApartmentForm';
-import  SubmitButton from '@/components/SubmitButton';
 import Apartment from "@/interface/Apartment";
+import useCreateApartment from "@/api/apartment/useCreateApartment";
 export default function CreateApartmentPage() {
-    // const createMutation = useCreateCustomer();
+    const createMutation = useCreateApartment();
+
     const handleCreate = (data: Apartment) => {
-    // createMutation.mutate(data);
-    toast.success("Create customer successfully");
- }
+        console.log(data)
+        createMutation.mutate(data);
+        toast.success("Create customer successfully");
+    }
 
     return (
         <div>
              <h1 className="text-xl mb-5">สร้างอพาร์ทเม้นท์</h1>
-             <div className=" bg-gray-200 py-10 px-5 rounded-xl ">
+             <div>
                 <CreateApartmentForm handleCreate={handleCreate}/>
-                <SubmitButton text="Submit"/>
              </div>
         </div>
     );
