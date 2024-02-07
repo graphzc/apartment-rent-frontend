@@ -16,6 +16,16 @@
   }
 }
 
+@layer components {
+  .input-primary {
+    @apply block w-full rounded-lg py-2 border-gray-400 border px-2 mt-2;
+  }
+  .submit-button {
+    @apply bg-blue-500 text-white px-4 py-2 rounded-lg w-full flex justify-center;
+  }
+}
+
+
 body {
   color: rgb(var(--foreground-rgb));
   /* background: linear-gradient(

@@ -35,12 +35,6 @@ export default function Navbar() {
     return (
         <nav className='bg-white h-screen border-r py-5 px-3 border-gray-200 sticky top-0 col-span-1 self-start'>
             <div className='font-bold text-center text-lg pb-3 flex justify-center gap-2'>
-                {/* <Image 
-                    src={Logo}
-                    width={30}
-                    height={30}
-                    alt='Poolworld'
-                /> */}
                 <div>
                     ซ้งศรีเจริญ
                 </div>
@@ -50,13 +44,12 @@ export default function Navbar() {
             </div>
             <div className='flex flex-col justify-between'>
                 <div>
-                    <NavbarItem href="/dashboard" text="แดชบอร์ด" currentPath={pathname} />
-                    {/* { session?.user?.role === EmployeeRole.ADMIN && <NavbarItem href="/employee" text="พนักงาน" currentPath={pathname} />} */}
-                    
-                    <NavbarItem href="#" text="ลูกค้า" currentPath={pathname} />
-                    <NavbarItem href="#" text="อพาทเมนต์" currentPath={pathname} />
-                    <NavbarItem href="#" text="ห้อง" currentPath={pathname} />
-                    <NavbarItem href="#" text="การเช่า" currentPath={pathname} />
+                    <NavbarItem href="/admin/dashboard" text="แดชบอร์ด" currentPath={pathname} />
+                    <NavbarItem href="/admin/customer" text="ลูกค้า" currentPath={pathname} />
+                    <NavbarItem href="/admin/apartment" text="อพาทเมนต์" currentPath={pathname} />
+                    <NavbarItem href="/admin/room" text="ห้อง" currentPath={pathname} />
+                    <NavbarItem href="/apartment/rent" text="การเช่า" currentPath={pathname} />
+                    <NavbarItem href='/admin/payment' text='การชำระเงิน' currentPath={pathname} />
                 </div>
                 <div className="w-full">
                     <button
