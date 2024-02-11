@@ -9,7 +9,7 @@ export default function DeleteButton<T>({ id, handleDelete }:  DeleteButtonProps
     const deleteConfirm = (id: T) => {
         warningAlert({
             // Generate delete message in th
-            title: "คุณต้องการอพาร์ทเม้นท์ลบ?",
+            title: "คุณต้องการลบข้อมูล?",
             text: "เมื่อลบแล้วจะไม่สามารถกู้คืนข้อมูลได้",
             confirmButtonText: "ลบ",
             cancelButtonText: "ยกเลิก",

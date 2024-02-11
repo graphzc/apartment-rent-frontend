@@ -1,6 +1,7 @@
 'use client'
 
 import ActionButton from "@/components/ActionButton";
+import PaymentStatusBadge from "@/components/PaymentStatusBadge";
 import Payment from "@/interface/Payment";
 import { useRouter } from "next/navigation";
 import DataTable, { TableColumn } from "react-data-table-component";
@@ -14,9 +15,7 @@ export default function PaymentDataTable({ data }: PaymentDataTableProps) {
     const handleDelete = (id: number) => {
         router.push(`/admin/payment/${id}`)
     }
-    const handleEdit = (id: number) => {
-        router.push(`/admin/payment/${id}`)
-    }
+
     const handleView = (id: number) => {
         router.push(`/admin/payment/${id}`)
     }
@@ -39,12 +38,12 @@ export default function PaymentDataTable({ data }: PaymentDataTableProps) {
         },
         {
             name: 'สถานะ',
-            selector: (row: Payment) => row.status!,
+            cell: (row: Payment) => <PaymentStatusBadge status={row.status} />,
             sortable: true,
         },
         {
             name: '',
-            cell: (row: Payment) => <ActionButton<number> id={row.id!} handleDelete={handleDelete} handleEdit={handleEdit} handleView={handleView} />
+            cell: (row: Payment) => <ActionButton<number> id={row.id!} handleView={handleView} />
         },
     ];
     return(

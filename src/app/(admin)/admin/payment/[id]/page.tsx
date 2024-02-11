@@ -4,6 +4,7 @@ import useAdminChangePaymentStatus from "@/api/payment/useAdminChangePaymentStat
 import useAdminPayment from "@/api/payment/useAdminPayment";
 import BackButton from "@/components/BackButton";
 import { PaymentStatus } from "@/enum/PaymentStatus";
+import { convertPaymentStatusToTh } from "@/utils/paymentStatusUtils";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 
@@ -41,9 +42,11 @@ export default function PaymentInfoAdmin() {
             <div>
                 <p><b>ID:</b> {payment?.id}</p>
                 <p><b>จำนวนเงิน:</b>: {payment?.amount}</p>
-                <p><b>สถานะ: </b> { payment?.status}</p>
+                <p><b>สถานะ: </b> { convertPaymentStatusToTh(payment?.status) }</p>
                 <p><b>ห้อง: </b>: {payment?.booking?.room?.no}</p>
-                <img src={ `${process.env.NEXT_PUBLIC_BASE_BACKEND_URL}/upload/slip/${payment.slip}`} width="500px" /> 
+                { payment.status !== PaymentStatus.UNPAID  && 
+                    <img src={ `${process.env.NEXT_PUBLIC_BASE_BACKEND_URL}/upload/slip/${payment.slip}`} width="500px" /> 
+                }
 
                 {/* Accept and reject button */}
                 <div className="mt-2 flex gap-3">
