@@ -4,6 +4,8 @@ import { Inter, Kanit, Mitr, Noto_Sans_Thai, IBM_Plex_Sans_Thai, Prompt, Itim, K
 import Navbar from "./(main)/Navbar";
 import NextAuthProvider from "@/provider/NextAuthProvider";
 import QueryClientProvider from "@/provider/QueryClientProvider";
+import ToastContainer from '@/provider/ToastContainer'
+import 'react-toastify/dist/ReactToastify.css';
 
 const prompt = Prompt({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -27,6 +29,7 @@ export default function RootLayout({
       <body className={prompt.className}>
         <NextAuthProvider>
           <QueryClientProvider>
+            <ToastContainer />
             {children}
           </QueryClientProvider>
         </NextAuthProvider>

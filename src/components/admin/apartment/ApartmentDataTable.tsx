@@ -4,15 +4,17 @@ import DataTable from "@/components/DataTable";
 import { useRouter } from "next/navigation";
 import Apartment from "@/interface/Apartment";
 import ActionButton from "@/components/ActionButton"
+import useDeleteApartment from "@/api/apartment/useDeleteApartment";
 
 
 export default function ApartmentDataTable({data} : {data: Apartment[]}){
     const router = useRouter();
-    const handleDelete = (id: number) => {
-        router.push(`/admin/apartment/${id}`)
+    const deleteApartment = useDeleteApartment();
+    const handleDelete = async (id: number) => {
+        const deleted = await deleteApartment.mutateAsync(id);
     }
     const handleEdit = (id: number) => {
-        router.push(`/admin/apartment/${id}`)
+        router.push(`/admin/apartment/edit/${id}`)
     }
     const handleView = (id: number) => {
         router.push(`/admin/apartment/${id}`)

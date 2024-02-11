@@ -4,9 +4,9 @@ import ViewButton from "./ViewButton";
 
 interface ActionButtonProps<T> {
     id: T;
-    handleDelete: (id: T) => void;
-    handleEdit: (id: T) => void;
-    handleView: (id: T) => void;
+    handleDelete?: (id: T) => void;
+    handleEdit?: (id: T) => void;
+    handleView?: (id: T) => void;
 }
 
 export default function ActionButton<T>({
@@ -17,18 +17,20 @@ export default function ActionButton<T>({
 }: ActionButtonProps<T>) {
     return (
         <div className="flex gap-2">
-            <ViewButton 
-                id={id}
-                handleView={handleView} 
-            />
-            <EditButton
-                id={id}
-                handleEdit={handleEdit}
-            />
-            <DeleteButton
+            { handleView && 
+                <ViewButton 
+                    id={id} 
+                    handleView={handleView} 
+                /> }
+            { handleEdit && 
+                <EditButton 
+                    id={id} 
+                    handleEdit={handleEdit} 
+                /> }
+            { handleDelete && 
+                <DeleteButton 
                 id={id} 
-                handleDelete={handleDelete}
-            />
+                handleDelete={handleDelete} /> }
         </div>
     )
 }

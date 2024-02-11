@@ -10,7 +10,7 @@ const fetchRoom = async (id: number) => {
 
 const useRoom = (id: number) => {
     return useQuery({
-        queryKey: roomQueryKeys.all,
+        queryKey: roomQueryKeys.detail(id),
         queryFn: async () => fetchRoom(id),
     });
 };

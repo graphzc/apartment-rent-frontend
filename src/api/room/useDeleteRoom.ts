@@ -1,12 +1,12 @@
-import Apartment from "@/interface/Apartment";
+import Room from "@/interface/Room";
 import axios from "@/lib/axios.config";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getSession } from "next-auth/react";
-import apartmentQueryKeys from "./apartmentQueryKey";
+import roomQueryKeys from "./roomQueryKey";
 
-const createApartment = async (apartment: Apartment) => {
+const deleteRoom = async (roomId: number) => {
     const session = await getSession();
-    const { data } = await axios.post<Apartment>("/admin/apartment", apartment, {
+    const { data } = await axios.delete<Room>(`/admin/room/${roomId}`, {
         headers:{
             Authorization: `Bearer ${session?.accessToken}`,
         },
@@ -14,15 +14,15 @@ const createApartment = async (apartment: Apartment) => {
     return data;
 }
 
-const useCreateApartment = () => {
+const useCreateRoom = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: createApartment,
+        mutationFn: deleteRoom,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: apartmentQueryKeys.all })
+            queryClient.invalidateQueries({ queryKey: roomQueryKeys.all})
         }
     })
 
 };
 
-export default useCreateApartment;
+export default useCreateRoom;

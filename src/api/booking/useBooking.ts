@@ -10,7 +10,7 @@ const fetchBooking = async (id: number) => {
 
 const useBooking = (id: number) => {
     return useQuery({
-        queryKey: bookingQueryKeys.all,
+        queryKey: bookingQueryKeys.detail(id),
         queryFn: async () => fetchBooking(id),
     });
 };

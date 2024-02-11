@@ -45,10 +45,9 @@ export default function Navbar() {
             <div className='flex flex-col justify-between'>
                 <div>
                     <NavbarItem href="/admin/dashboard" text="แดชบอร์ด" currentPath={pathname} />
-                    <NavbarItem href="/admin/customer" text="ลูกค้า" currentPath={pathname} />
+                    <NavbarItem href="/admin/user" text="ผู้ใช้" currentPath={pathname} />
                     <NavbarItem href="/admin/apartment" text="อพาทเมนต์" currentPath={pathname} />
                     <NavbarItem href="/admin/room" text="ห้อง" currentPath={pathname} />
-                    <NavbarItem href="/apartment/rent" text="การเช่า" currentPath={pathname} />
                     <NavbarItem href='/admin/payment' text='การชำระเงิน' currentPath={pathname} />
                 </div>
                 <div className="w-full">

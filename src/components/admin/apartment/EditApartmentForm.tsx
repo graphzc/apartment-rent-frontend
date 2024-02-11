@@ -3,48 +3,35 @@
 import { useForm } from "react-hook-form";
 import SubmitButton from "@/components/SubmitButton";
 import Apartment from "@/interface/Apartment";
+import { useEffect } from "react";
 
 interface EditApartmentFormProps {
-    data: Apartment;
+    apartment: Apartment;
     handleUpdate: (data: Apartment) => void;
 }
 
-export default function EditApartmentForm() {
-
+export default function EditApartmentForm({ apartment, handleUpdate }: EditApartmentFormProps) {
+    const {register, handleSubmit, reset, formState} = useForm<Apartment>();
+    useEffect(() => {
+        if(formState.isSubmitSuccessful){
+            reset();
+        }
+    },[formState, reset])
     return (
         <div>
-            <form >
-                <div className="mb-2.5 px-3 text-lg">
-                    <label htmlFor="id">ID</label>
-                    <input
-                    type="text"
-                    id="id"
-                    className="input-primary"
-                    required={true}
-                    readOnly
-                    />
-                </div>
-                <div className="mb-2.5 px-3 text-lg">
+            <form onSubmit={handleSubmit(handleUpdate)}>
+                <input type="hidden" value={apartment.id} {...register('id')} />
+                <div className="mb-2.5 text-lg">
                     <label htmlFor="name">ชื่ออพาร์ทเม้นท์</label>
                     <input
-                    type="text"
-                    id="name"
-                    className="input-primary"
-                    required={true}
-
+                        type="text"
+                        id="name"
+                        className="input-primary"
+                        required={true}
+                        defaultValue={apartment.name}
+                        {...register('name')}
                     />
                 </div>
-                <div className="mb-2.5 px-3 text-lg">
-                    <label htmlFor="rooms">จำนวนห้อง</label>
-                    <input
-                    type="text"
-                    id="rooms"
-                    className="input-primary"
-                    required={true}
-
-                    />
-                </div>
-                
                 <div className="mt-4">
                     <SubmitButton text="แก้ไข"/>
                 </div>

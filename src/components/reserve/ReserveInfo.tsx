@@ -2,7 +2,7 @@
 
 import useBooking from "@/api/booking/useBooking";
 import { PaymentStatus } from "@/enum/PaymentStatus";
-import convertPaymentStatus from "@/utils/statusConvert";
+import { convertPaymentStatus } from "@/utils/paymentStatusUtils";
 import Link from "next/link";
 
 interface ReserveInfoProps {

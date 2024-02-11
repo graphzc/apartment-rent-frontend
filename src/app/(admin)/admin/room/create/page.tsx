@@ -26,7 +26,7 @@ export default function CreateRoomPage() {
         <div>
              <h1 className="text-xl mb-5">สร้างห้องพัก</h1>
              <div>
-                <CreateRoomForm  apartments={apartments!} handleCreate={handleCreate}/>
+                <CreateRoomForm apartments={apartments!} handleCreate={handleCreate}/>
              </div>
         </div>
     );
