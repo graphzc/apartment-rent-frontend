@@ -12,9 +12,6 @@ interface PaymentDataTableProps {
 
 export default function PaymentDataTable({ data }: PaymentDataTableProps) {
     const router = useRouter();
-    const handleDelete = (id: number) => {
-        router.push(`/admin/payment/${id}`)
-    }
 
     const handleView = (id: number) => {
         router.push(`/admin/payment/${id}`)
