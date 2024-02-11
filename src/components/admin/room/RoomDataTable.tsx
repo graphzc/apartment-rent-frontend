@@ -1,17 +1,26 @@
+'use client'
 
 import { TableColumn } from "react-data-table-component";
 import DataTable from "@/components/DataTable";
 import { useRouter } from "next/navigation";
 import Room from "@/interface/Room";
 import ActionButton from "@/components/ActionButton";
+import useDeleteRoom from "@/api/room/useDeleteRoom";
 
 export default function RoomDataTable({data} : {data: Room[]}){
     const router = useRouter();
-    const handleDelete = (id: number) => {
-        router.push(`/admin/room/${id}`)
+
+    const deleteMutation = useDeleteRoom();
+
+    const handleDelete = async (id: number) => {
+        await deleteMutation.mutateAsync(id);
+        if(deleteMutation.isSuccess){
+            router.push('/admin/room')
+        }
     }
+
     const handleEdit = (id: number) => {
-        router.push(`/admin/room/${id}`)
+        router.push(`/admin/room/edit/${id}`)
     }
     const handleView = (id: number) => {
         router.push(`/admin/room/${id}`)
@@ -40,8 +49,8 @@ export default function RoomDataTable({data} : {data: Room[]}){
     ];
     return(
         <DataTable
-            columns = {columns}
-            data = {data}
+            columns={columns}
+            data={data}
         />
     )
 }

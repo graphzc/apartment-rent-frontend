@@ -4,54 +4,61 @@ import { useForm } from "react-hook-form";
 import SubmitButton from "@/components/SubmitButton";
 import Room from "@/interface/Room";
 import Apartment from "@/interface/Apartment";
+import { useEffect } from "react";
 
 interface EditRoomFormProps {
-    // data: Room;
+    room: Room;
     apartments: Apartment[];
-//     handleUpdate: (data: Room) => void;
+    handleUpdate: (data: Room) => void;
 }
 
-export default function EditRoomForm( {apartments}: EditRoomFormProps ) {
-
+export default function EditRoomForm( {room, apartments, handleUpdate}: EditRoomFormProps ) {
+    const {register, handleSubmit, reset, formState} = useForm<Room>();
+    useEffect(() => {
+        if(formState.isSubmitSuccessful){
+            reset();
+        }
+    },[formState, reset])
     return (
         <div>
-            <form >
-                <div className="mb-2.5 px-3 text-lg">
-                    <label htmlFor="id">ID</label>
-                    <input
-                    type="text"
-                    id="id"
-                    className="input-primary"
-                    required={true}
-                    readOnly
-                    />
-                </div>
-                <div className="mb-2.5 px-3 text-lg">
-                    <label htmlFor="name">ชื่อห้อง</label>
+            <form onSubmit={handleSubmit(handleUpdate)}>
+                <input type="hidden" value={room.id} {...register('id')}/>
+                <div className="mb-2.5 ext-lg">
+                    <label htmlFor="name">เลขห้องพัก</label>
                     <input
                     type="text"
                     id="name"
                     className="input-primary"
                     required={true}
-
+                    defaultValue={room.no}
+                    {...register('no')}
                     />
                 </div>
-                <div className="mb-2.5 px-3 text-lg">
+                <div className="mb-2.5 text-lg">
                     <label htmlFor="apartment">เลือกอพาร์ทเม้นท์</label>
                     <select
                         id="apartment"
                         className="input-primary"
-                        required={true}
+                        defaultValue={room.apartmentId}
+                        {...register('apartmentId')}
                     >
-                        <option hidden></option>
                         {apartments?.map((apartment) =>( 
-                            <option id={apartment.id} value={apartment.id}> {apartment.name} </option>
+                            <option key={apartment.id}  value={apartment.id}> {apartment.name} </option>
                             ))}
                     </select>
                 </div>
-                <div className="mt-4">
-                    <SubmitButton text="แก้ไข"/>
+                <div className="mb-2.5 ext-lg">
+                    <label htmlFor="name">ราคา</label>
+                    <input
+                    type="number"
+                    id="price"
+                    className="input-primary"
+                    required={true}
+                    defaultValue={room.price}
+                    {...register('price')}
+                    />
                 </div>
+                <SubmitButton text="บันทึก"/>
             </form>
         </div>
     )

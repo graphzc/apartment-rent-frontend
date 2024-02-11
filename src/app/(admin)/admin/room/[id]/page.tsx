@@ -18,9 +18,7 @@ export default function CreateCustomerPage({params} : {params: {id: string}}) {
         <div>
              <h1 className="text-xl mb-5">แก้ไขห้องพัก</h1>
              <div className=" bg-gray-200 py-10 px-5 rounded-xl ">
-                <EditRoomForm apartments={apartments!} 
-                ></EditRoomForm>
-
+                {/* <EditRoomForm apartments={apartments!} /> */}
              </div>
         </div>
     );
