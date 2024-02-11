@@ -4,9 +4,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getSession } from "next-auth/react";
 import apartmentQueryKeys from "./apartmentQueryKey";
 
-const createApartment = async (apartment: Apartment) => {
+const deleteApartment = async (apartmentId: number) => {
     const session = await getSession();
-    const { data } = await axios.post<Apartment>("/admin/apartment", apartment, {
+    const { data } = await axios.delete<Apartment>(`/admin/apartment/${apartmentId}`, {
         headers:{
             Authorization: `Bearer ${session?.accessToken}`,
         },
@@ -17,9 +17,9 @@ const createApartment = async (apartment: Apartment) => {
 const useCreateApartment = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: createApartment,
+        mutationFn: deleteApartment,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: apartmentQueryKeys.all })
+            queryClient.invalidateQueries({ queryKey: apartmentQueryKeys.all})
         }
     })
 
