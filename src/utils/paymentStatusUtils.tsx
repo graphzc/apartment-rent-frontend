@@ -1,6 +1,6 @@
 import { PaymentStatus } from "@/enum/PaymentStatus";
 
-export function convertPaymentStatus(status: PaymentStatus) {
+export function ConvertPaymentStatus(status: PaymentStatus) {
     switch (status) {
         case PaymentStatus.UNPAID:
             return <span className='text-orange-500'>ยังไม่ชำระเงิน</span>;
