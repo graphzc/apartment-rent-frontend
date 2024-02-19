@@ -81,7 +81,7 @@ export default function Example() {
       <div className="relative">
         <button
           className="fixed bottom-5 right-5  text-gray-900 bg-gray-200 p-4 hover:scale-110 hover:duration-300 rounded-full"
-          onClick={() => setChat(true)}
+          onClick={() => window.location.href = 'https://www.facebook.com/peerakorn.laksanasut.7'}
         >
           <ChatBubbleLeftRightIcon className="h-10 w-10" aria-hidden="true" />
         </button>
@@ -101,7 +101,7 @@ export default function Example() {
                 </Typography>
                 <button
                   className="flex justify-end"
-                  onClick={() => setChat(false)}
+                  onClick={() => window.location.href = 'https://www.facebook.com/peerakorn.laksanasut.7'}
                 >
                   <XCircleIcon className="h-7 w-7" aria-hidden="true" />
                 </button>
@@ -237,15 +237,6 @@ export default function Example() {
                 </div>
               </div>
               { status == "authenticated" ? <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                <button
-                  onClick={() => setOpen(true)}
-                  type="button"
-                  className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-1 focus:ring-white focus:ring-offset-0 focus:ring-offset-gray-800"
-                >
-                  <span className="absolute -inset-1.5" />
-                  <span className="sr-only">View notifications</span>
-                  <BellIcon className="h-6 w-6" aria-hidden="true" />
-                </button>
 
                 {/* Profile dropdown */}
                 <Menu as="div" className="relative ml-3">
