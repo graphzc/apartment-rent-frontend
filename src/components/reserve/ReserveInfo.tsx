@@ -3,6 +3,7 @@
 import useBooking from "@/api/booking/useBooking";
 import { PaymentStatus } from "@/enum/PaymentStatus";
 import { ConvertPaymentStatus } from "@/utils/paymentStatusUtils";
+import { thDateString, thDateTimeString } from "@/utils/thDateConvertor";
 import Link from "next/link";
 
 interface ReserveInfoProps {
@@ -25,7 +26,7 @@ export default function ReserveInfo({ id } : ReserveInfoProps) {
         <div>
             <div>
                 <div><b>ห้อง</b> {booking?.room.no}</div>
-                <div><b>ระยะเวลา</b> { new Date(booking?.startDate!).toDateString() } -  { new Date(booking?.endDate!).toDateString() }</div>
+                <div><b>ระยะเวลา</b> { thDateString(booking?.startDate!) } -  { thDateString(booking?.endDate!) }</div>
                 <div><b>ราคาต่อเดือน</b> {booking?.room.price} บาท/เดือน</div>
             </div>
             <div>
@@ -33,7 +34,7 @@ export default function ReserveInfo({ id } : ReserveInfoProps) {
                 {booking?.payment.map((payment) => (
                     <div key={payment.id} className="flex mt-2 border border-gray-400 px-6 py-3 rounded-lg text-left w-full justify-between content-center">
                         <div>
-                            วันที่สร้าง: {new Date(payment.createdAt).toDateString()} <br />
+                            วันที่สร้าง: {thDateTimeString(payment.createdAt)} <br />
                             จำนวนเงิน: {payment.amount} บาท <br />
                             สถานะ: { ConvertPaymentStatus(payment.status) }
                         </div>
