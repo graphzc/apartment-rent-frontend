@@ -7,7 +7,7 @@ import { ConvertPaymentStatus } from "@/utils/paymentStatusUtils";
 import { thDateString } from "@/utils/thDateConvertor";
 
 export default function ViewBooking({params} : {params: {id: string}}) {
-    const { data: booking, isPending, error } = useBooking(parseInt(params.id));
+    const { data: booking, isPending, error } = useBooking(parseInt(params.id)); 
 
     if (isPending) {
         return <div>Loading...</div>;
@@ -39,6 +39,32 @@ export default function ViewBooking({params} : {params: {id: string}}) {
             <div className="mt-2">
                 <span className="font-medium">สถานะการชำระเงินล่าสุด</span> : { ConvertPaymentStatus(booking.payment[0].status) } 
             </div>
+            {
+                booking.utility.length == 0 ?
+                <div>
+                    <div className="mt-2">
+                        <span className="font-medium">ค่าน้ำ</span> : <span className="text-red-500">ยังไม่ได้กำหนด</span>
+                    </div>
+                    <div className="mt-2">
+                        <span className="font-medium">ค่าไฟ</span> : <span className="text-red-500">ยังไม่ได้กำหนด</span>
+                    </div>
+                </div>
+                :
+                <div>
+                    <div className="mt-2">
+                        <span className="font-medium">ค่าน้ำ</span> : { booking.utility[0].plumbing } หน่วย
+                    </div>
+                    <div className="mt-2">
+                        <span className="font-medium">ค่าไฟ</span> : { booking.utility[0].electricity } หน่วย
+                    </div>
+                </div>
+            }
+            <div className="mt-4">
+                <a href={`/admin/booking/${params.id}/add-utility`} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    เพิ่มข้อมูลค่าน้ำค่าไฟ
+                </a>
+            </div>
+
         </div>
     )
 }
