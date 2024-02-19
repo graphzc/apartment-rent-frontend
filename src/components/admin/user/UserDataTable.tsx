@@ -28,11 +28,6 @@ export default function UserDataTable({ data }: UserDataTableProps) {
 
     const columns: TableColumn<User>[] = [
         {
-            name: 'ID',
-            selector: (row: User) => row.id!,
-            sortable: true,
-        },
-        {
             name: 'ชื่อ',
             selector: (row: User) => row.name!,
             sortable: true,

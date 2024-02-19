@@ -19,11 +19,6 @@ export default function PaymentDataTable({ data }: PaymentDataTableProps) {
 
     const columns: TableColumn<Payment>[] = [
         {
-            name: 'ID',
-            selector: (row: Payment) => row.id!,
-            sortable: true,
-        },
-        {
             name: 'ห้อง',
             selector: (row: Payment) => row.booking.room.no!,
             sortable: true,

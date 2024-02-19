@@ -22,11 +22,6 @@ export default function ApartmentDataTable({data} : {data: Apartment[]}){
 
     const columns: TableColumn<Apartment>[] = [
         {
-            name: 'ID',
-            selector: (row: Apartment) => row.id!,
-            sortable: true,
-        },
-        {
             name: 'ชื่อ',
             selector: (row: Apartment) => row.name!,
             sortable: true,
