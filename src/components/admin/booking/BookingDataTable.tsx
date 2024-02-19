@@ -5,7 +5,8 @@ import Booking from "@/interface/Booking";
 import { ConvertPaymentStatus } from "@/utils/paymentStatusUtils";
 import { thDateString } from "@/utils/thDateConvertor";
 import { useRouter } from "next/navigation";
-import DataTable, { TableColumn } from "react-data-table-component";
+import { TableColumn } from "react-data-table-component";
+import DataTable from "@/components/DataTable";
 
 interface BookingDataTableProps {
     data: Booking[];

@@ -19,7 +19,7 @@ export default function CreateRoomPage() {
     }
     const handleCreate = (data: Room) => {
         createMutation.mutate(data);
-        toast.success("Create customer successfully");
+        toast.success("สร้างห้องพักสำเร็จ");
     }
 
     return (

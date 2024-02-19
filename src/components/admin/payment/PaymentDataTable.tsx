@@ -4,7 +4,8 @@ import ActionButton from "@/components/ActionButton";
 import PaymentStatusBadge from "@/components/PaymentStatusBadge";
 import Payment from "@/interface/Payment";
 import { useRouter } from "next/navigation";
-import DataTable, { TableColumn } from "react-data-table-component";
+import { TableColumn } from "react-data-table-component";
+import DataTable from "@/components/DataTable";
 
 interface PaymentDataTableProps {
     data: Payment[];

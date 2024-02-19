@@ -1,4 +1,5 @@
 import useMyBooking from "@/api/booking/useMyBooking";
+import { thDateString } from "@/utils/thDateConvertor";
 import Link from "next/link";
 
 export default function MyReserveList() {
@@ -17,7 +18,7 @@ export default function MyReserveList() {
             {reserves?.map((reserve) => (
                 <Link href={`/my-reserve/${reserve.id}`} className="mt-2 border border-gray-400 px-4 py-2 rounded-lg text-left block w-full transition hover:border-black" key={reserve.id}>
                     <div><b>ห้อง</b> {reserve.room.no}</div>
-                    <div><b>ระยะเวลา</b> { new Date(reserve.startDate).toDateString() } -  { new Date(reserve.endDate).toDateString() }</div>
+                    <div><b>ระยะเวลา</b> { thDateString(reserve.startDate) } -  { thDateString(reserve.endDate) }</div>
                 </Link>
             ))}
         </div>

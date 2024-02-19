@@ -2,9 +2,10 @@
 
 import useDeleteUser from "@/api/user/useDeleteUser";
 import ActionButton from "@/components/ActionButton";
+import DataTable from "@/components/DataTable";
 import User from "@/interface/User";
 import { useRouter } from "next/navigation";
-import DataTable, { TableColumn } from "react-data-table-component";
+import { TableColumn } from "react-data-table-component";
 
 interface UserDataTableProps {
     data: User[];
