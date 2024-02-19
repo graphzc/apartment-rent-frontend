@@ -49,6 +49,7 @@ export default function Navbar() {
                     <NavbarItem href="/admin/apartment" text="อพาทเมนต์" currentPath={pathname} />
                     <NavbarItem href="/admin/room" text="ห้อง" currentPath={pathname} />
                     <NavbarItem href='/admin/payment' text='การชำระเงิน' currentPath={pathname} />
+                    <NavbarItem href='/admin/news' text='ข่าวสาร' currentPath={pathname} />
                 </div>
                 <div className="w-full">
                     <button

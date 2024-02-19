@@ -11,7 +11,7 @@ export default function CreateApartmentPage() {
     const handleCreate = async (data: Apartment) => {
         console.log(data)
         await createMutation.mutateAsync(data);
-        toast.success("Create customer successfully");
+        toast.success("สร้างอพาทเมนต์สำเร็จ");
     }
 
     return (
