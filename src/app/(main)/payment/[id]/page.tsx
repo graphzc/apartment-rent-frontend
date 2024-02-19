@@ -3,17 +3,19 @@ import useUploadSlip from "@/api/payment/useUploadSlip";
 import PaymentForm from "@/components/payment/PaymentForm";
 import PaymentInfo from "@/components/payment/PaymentInfo";
 import Payment from "@/interface/Payment";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 export default function PaymentPage() {
   const { id } = useParams<{ id: string }>();
+  const router = useRouter();
   const uploadSlipMutate = useUploadSlip();
 
-  const handleUploadSlip = (data: any) => {
+  const handleUploadSlip = async (data: any) => {
     const formData = new FormData();
     formData.append('id', data.id);
     formData.append('slip', data['slip'][0]);
-    uploadSlipMutate.mutate(formData); 
+    await uploadSlipMutate.mutateAsync(formData); 
+    router.back();
   }
   
   return (
