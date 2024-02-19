@@ -2,7 +2,7 @@
 
 import useBooking from "@/api/booking/useBooking";
 import { PaymentStatus } from "@/enum/PaymentStatus";
-import { convertPaymentStatus } from "@/utils/paymentStatusUtils";
+import { ConvertPaymentStatus } from "@/utils/paymentStatusUtils";
 import Link from "next/link";
 
 interface ReserveInfoProps {
@@ -35,7 +35,7 @@ export default function ReserveInfo({ id } : ReserveInfoProps) {
                         <div>
                             วันที่สร้าง: {new Date(payment.createdAt).toDateString()} <br />
                             จำนวนเงิน: {payment.amount} บาท <br />
-                            สถานะ: { convertPaymentStatus(payment.status) }
+                            สถานะ: { ConvertPaymentStatus(payment.status) }
                         </div>
                         { payment.status === PaymentStatus.UNPAID &&
                             <Link href={`/payment/${payment.id}`} className="flex flex-col justify-center">
