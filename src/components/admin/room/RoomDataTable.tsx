@@ -28,6 +28,11 @@ export default function RoomDataTable({data} : {data: Room[]}){
 
     const columns: TableColumn<Room>[] = [
         {
+            name: 'ID',
+            selector: (row: Room) => row.id!,
+            sortable: true,
+        },
+        {
             name: 'เลขห้อง',
             selector: (row: Room) => row.no!,
             sortable: true,

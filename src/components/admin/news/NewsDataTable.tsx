@@ -22,6 +22,11 @@ export default function NewsDataTable({data} : {data: News[]}){
 
     const columns: TableColumn<News>[] = [
         {
+            name: 'ID',
+            selector: (row: News) => row.id!,
+            sortable: true,
+        },
+        {
             name: 'หัวข้อ',
             selector: (row: News) => row.title!,
             sortable: true,
