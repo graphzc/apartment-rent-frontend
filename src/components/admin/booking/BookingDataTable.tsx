@@ -21,6 +21,11 @@ export default function BookingDataTable({ data }: BookingDataTableProps) {
 
     const columns: TableColumn<Booking>[] = [
         {
+            name: 'ID',
+            selector: (row: Booking) => row.id!,
+            sortable: true,
+        },
+        {
             name: 'อพาทต์เมนต์',
             selector: (row: Booking) => row.room.apartment.name,
             sortable: true,
