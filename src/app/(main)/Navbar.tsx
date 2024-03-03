@@ -35,6 +35,7 @@ const memberNavigation = [
   { name: "หน้าหลัก", href: "/home", current: true },
   { name: "จองห้อง", href: "/reserve", current: false },
   { name: "แผนที่", href: "/map", current: false },
+  { name: 'สาธารณูปโภค', href: '/utility', current: false },
   { name: "ข่าวสาร", href: "/news", current: false },
   { name: "ติดต่อเรา", href: "/contact", current: false },
 ];
