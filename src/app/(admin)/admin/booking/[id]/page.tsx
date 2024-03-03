@@ -25,6 +25,9 @@ export default function ViewBooking({params} : {params: {id: string}}) {
                 <span className="font-medium">อพาทต์เมนต์</span> : { booking.room.apartment.name } 
             </div>
             <div className="mt-2">
+                <span className="font-medium">ผู้จอง</span> : { booking.user.name }
+            </div>
+            <div className="mt-2">
                 <span className="font-medium">เลขห้อง</span> : { booking.room.no }
             </div>
             <div className="mt-2">

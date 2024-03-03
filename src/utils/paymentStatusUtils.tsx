@@ -9,7 +9,7 @@ export function ConvertPaymentStatus(status: PaymentStatus) {
         case PaymentStatus.REJECTED:
             return <span className='text-red-500'>ชำระเงินไม่สำเร็จ</span>;
         case PaymentStatus.PENDING:
-            return <span className='text-yellow-500'>รอเช็คการชำระเงิน </span>;
+            return <span className='text-blue-500'>รอเช็คการชำระเงิน </span>;
         default:
             return "Unknown";
     }
