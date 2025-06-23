@@ -5,8 +5,8 @@ import useAdminPayment from "@/api/payment/useAdminPayment";
 import BackButton from "@/components/BackButton";
 import { PaymentStatus } from "@/enum/PaymentStatus";
 import { convertPaymentStatusToTh } from "@/utils/paymentStatusUtils";
-import Link from "next/link";
 import { useParams } from "next/navigation";
+import { env } from 'next-runtime-env';
 
 export default function PaymentInfoAdmin() {
     const { id } = useParams<{ id: string }>();
@@ -45,7 +45,7 @@ export default function PaymentInfoAdmin() {
                 <p><b>สถานะ: </b> { convertPaymentStatusToTh(payment?.status) }</p>
                 <p><b>ห้อง: </b>: {payment?.booking?.room?.no}</p>
                 { payment.status !== PaymentStatus.UNPAID  && 
-                    <img src={ `${process.env.NEXT_PUBLIC_BASE_BACKEND_URL}/upload/slip/${payment.slip}`} width="500px" /> 
+                    <img src={ `${env('NEXT_PUBLIC_BASE_BACKEND_URL')}/upload/slip/${payment.slip}`} width="500px" /> 
                 }
 
                 {/* Accept and reject button */}
