@@ -10,6 +10,7 @@ import {
   ChatBubbleLeftRightIcon,
   XCircleIcon,
 } from "@heroicons/react/24/outline";
+import { FaFacebookMessenger, FaLine } from "react-icons/fa";
 import {
   Card,
   CardBody,
@@ -35,7 +36,7 @@ const memberNavigation = [
   { name: "หน้าหลัก", href: "/home", current: true },
   { name: "จองห้อง", href: "/reserve", current: false },
   { name: "แผนที่", href: "/map", current: false },
-  { name: 'สาธารณูปโภค', href: '/utility', current: false },
+  { name: "สาธารณูปโภค", href: "/utility", current: false },
   { name: "ข่าวสาร", href: "/news", current: false },
   { name: "ติดต่อเรา", href: "/contact", current: false },
 ];
@@ -43,7 +44,7 @@ const memberNavigation = [
 const adminNavigation = [
   ...memberNavigation,
   { name: "ระบบจัดการ", href: "/admin/dashboard", current: false },
-]
+];
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -53,17 +54,17 @@ export default function Example() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const cancelButtonRef = useRef(null);
-  
+
   const [chat, setChat] = useState(false);
-  
-  const { data: session, status } = useSession()
-  
-  if (status === 'loading') {
-    return <div className="bg-gray-900 h-16"></div>
+
+  const { data: session, status } = useSession();
+
+  if (status === "loading") {
+    return <div className="bg-gray-900 h-16"></div>;
   }
 
   let navigation = guestNavigation;
-  
+
   switch (session?.user?.role) {
     case UserRole.USER:
       navigation = memberNavigation;
@@ -75,16 +76,26 @@ export default function Example() {
       navigation = guestNavigation;
       break;
   }
-  
-  
+
   const ChatBox = () => {
     return (
       <div className="relative">
         <button
           className="fixed bottom-5 right-5  text-gray-900 bg-gray-200 p-4 hover:scale-110 hover:duration-300 rounded-full"
-          onClick={() => window.location.href = 'https://www.facebook.com/peerakorn.laksanasut.7'}
+          onClick={() =>
+            (window.location.href =
+              "https://www.facebook.com/peerakorn.laksanasut.7")
+          }
         >
-          <ChatBubbleLeftRightIcon className="h-10 w-10" aria-hidden="true" />
+          <FaFacebookMessenger className="h-10 w-10" aria-hidden="true" />
+        </button>
+        <button
+          className="fixed bottom-24 right-5  text-gray-900 bg-gray-200 p-4 hover:scale-110 hover:duration-300 rounded-full"
+          onClick={() =>
+            (window.location.href = "https://line.me/ti/g/AmJzV8UhaL")
+          }
+        >
+          <FaLine className="h-10 w-10" aria-hidden="true" />
         </button>
       </div>
     );
@@ -102,7 +113,10 @@ export default function Example() {
                 </Typography>
                 <button
                   className="flex justify-end"
-                  onClick={() => window.location.href = 'https://www.facebook.com/peerakorn.laksanasut.7'}
+                  onClick={() =>
+                    (window.location.href =
+                      "https://www.facebook.com/peerakorn.laksanasut.7")
+                  }
                 >
                   <XCircleIcon className="h-7 w-7" aria-hidden="true" />
                 </button>
@@ -237,76 +251,76 @@ export default function Example() {
                   </div>
                 </div>
               </div>
-              { status == "authenticated" ? <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-
-                {/* Profile dropdown */}
-                <Menu as="div" className="relative ml-3">
-                  <div>
-                    <Menu.Button className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-1 focus:ring-white focus:ring-offset-0 focus:ring-offset-gray-800">
-                      <span className="absolute -inset-1.5" />
-                      <span className="sr-only">Open user menu</span>
-                      <UserCircleIcon
-                        className="block h-8 w-8"
-                        aria-hidden="true"
-                      />
-                    </Menu.Button>
-                  </div>
-                  <Transition
-                    as={Fragment}
-                    enter="transition ease-out duration-100"
-                    enterFrom="transform opacity-0 scale-95"
-                    enterTo="transform opacity-100 scale-100"
-                    leave="transition ease-in duration-75"
-                    leaveFrom="transform opacity-100 scale-100"
-                    leaveTo="transform opacity-0 scale-95"
+              {status == "authenticated" ? (
+                <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+                  {/* Profile dropdown */}
+                  <Menu as="div" className="relative ml-3">
+                    <div>
+                      <Menu.Button className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-1 focus:ring-white focus:ring-offset-0 focus:ring-offset-gray-800">
+                        <span className="absolute -inset-1.5" />
+                        <span className="sr-only">Open user menu</span>
+                        <UserCircleIcon
+                          className="block h-8 w-8"
+                          aria-hidden="true"
+                        />
+                      </Menu.Button>
+                    </div>
+                    <Transition
+                      as={Fragment}
+                      enter="transition ease-out duration-100"
+                      enterFrom="transform opacity-0 scale-95"
+                      enterTo="transform opacity-100 scale-100"
+                      leave="transition ease-in duration-75"
+                      leaveFrom="transform opacity-100 scale-100"
+                      leaveTo="transform opacity-0 scale-95"
+                    >
+                      <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-2 focus:outline-none">
+                        <Menu.Item>
+                          {({ active }) => (
+                            <a
+                              href="#"
+                              className={classNames(
+                                active ? "bg-gray-100" : "",
+                                "block px-4 py-2 text-sm text-gray-700"
+                              )}
+                            >
+                              โปรไฟล์
+                            </a>
+                          )}
+                        </Menu.Item>
+                        <Menu.Item>
+                          {({ active }) => (
+                            <button
+                              onClick={() => signOut()}
+                              className={classNames(
+                                active ? "bg-gray-100" : "",
+                                "block px-4 py-2 text-sm text-gray-700 w-full text-left"
+                              )}
+                            >
+                              ออกจากระบบ
+                            </button>
+                          )}
+                        </Menu.Item>
+                      </Menu.Items>
+                    </Transition>
+                  </Menu>
+                </div>
+              ) : (
+                <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+                  <Link
+                    href="/login"
+                    className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                   >
-                    <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-2 focus:outline-none">
-                      <Menu.Item>
-                        {({ active }) => (
-                          <a
-                            href="#"
-                            className={classNames(
-                              active ? "bg-gray-100" : "",
-                              "block px-4 py-2 text-sm text-gray-700"
-                            )}
-                          >
-                            โปรไฟล์
-                          </a>
-                        )}
-                      </Menu.Item>
-                      <Menu.Item>
-                        {({ active }) => (
-                          <button
-                            onClick={() => signOut()}
-                            className={classNames(
-                              active ? "bg-gray-100" : "",
-                              "block px-4 py-2 text-sm text-gray-700 w-full text-left"
-                            )}
-                          >
-                            ออกจากระบบ
-                          </button>
-                        )}
-                      </Menu.Item>
-                    </Menu.Items>
-                  </Transition>
-                </Menu>
-              </div> 
-                : 
-              <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                <Link 
-                  href="/login" 
-                  className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                >
-                  เข้าสู่ระบบ
-                </Link>
-                <Link
-                  href="/register"
-                  className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                >
-                  สมัครสมาชิก
-                </Link>
-              </div>
-              }
+                    เข้าสู่ระบบ
+                  </Link>
+                  <Link
+                    href="/register"
+                    className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                  >
+                    สมัครสมาชิก
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
 
