@@ -55,10 +55,10 @@ export default function ViewBooking({params} : {params: {id: string}}) {
                 :
                 <div>
                     <div className="mt-2">
-                        <span className="font-medium">ค่าน้ำ</span> : { booking.utility[0].plumbing } หน่วย
+                        <span className="font-medium">ค่าน้ำ</span> : { booking.utility[0].plumbing * 18 } บาท ({ booking.utility[0].plumbing } หน่วย)
                     </div>
                     <div className="mt-2">
-                        <span className="font-medium">ค่าไฟ</span> : { booking.utility[0].electricity } หน่วย
+                        <span className="font-medium">ค่าไฟ</span> : { booking.utility[0].electricity * 5 } บาท ({ booking.utility[0].electricity } หน่วย)
                     </div>
                 </div>
             }
