@@ -1,8 +1,7 @@
 export default interface News {
-    id: number;
+    id: string;
     title: string;
     content: string;
-    endDate: Date;
     createdAt: Date;
     updatedAt: Date;
 }
