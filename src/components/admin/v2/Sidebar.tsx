@@ -9,6 +9,10 @@ import {
   HomeIcon,
   BuildingOfficeIcon,
   KeyIcon,
+  NewspaperIcon,
+  InboxIcon,
+  ClipboardDocumentListIcon,
+  CreditCardIcon,
   Bars3Icon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
@@ -21,6 +25,8 @@ const Sidebar = ({ children }: SidebarProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [apartmentMenuOpen, setApartmentMenuOpen] = useState(true);
   const [roomMenuOpen, setRoomMenuOpen] = useState(true);
+  const [newsMenuOpen, setNewsMenuOpen] = useState(false);
+  const [mailboxMenuOpen, setMailboxMenuOpen] = useState(false);
   const pathname = usePathname();
 
   const isActive = (path: string) => pathname === path;
@@ -164,6 +170,136 @@ const Sidebar = ({ children }: SidebarProps) => {
                   </li>
                 </ul>
               )}
+            </li>
+
+            {/* News */}
+            <li>
+              <button
+                onClick={() => setNewsMenuOpen(!newsMenuOpen)}
+                className={`${
+                  pathname.startsWith("/adminv2/news")
+                    ? "bg-blue-50 border-blue-500 text-blue-700"
+                    : "border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                } group flex items-center w-full px-2 py-2 text-sm font-medium border-l-4 rounded-r-md`}
+              >
+                <NewspaperIcon className="mr-3 h-5 w-5" />
+                ข่าวสาร
+                {newsMenuOpen ? (
+                  <ChevronDownIcon className="ml-auto h-4 w-4" />
+                ) : (
+                  <ChevronRightIcon className="ml-auto h-4 w-4" />
+                )}
+              </button>
+
+              {newsMenuOpen && (
+                <ul className="mt-1 space-y-1">
+                  <li>
+                    <Link
+                      href="/adminv2/news"
+                      className={`${
+                        isActive("/adminv2/news")
+                          ? "bg-blue-50 text-blue-700"
+                          : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                      } group flex items-center pl-11 pr-2 py-2 text-sm font-medium`}
+                    >
+                      ข่าวสารทั้งหมด
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/adminv2/news/create"
+                      className={`${
+                        isActive("/adminv2/news/create")
+                          ? "bg-blue-50 text-blue-700"
+                          : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                      } group flex items-center pl-11 pr-2 py-2 text-sm font-medium`}
+                    >
+                      เพิ่มข่าวสาร
+                    </Link>
+                  </li>
+                </ul>
+              )}
+            </li>
+
+            {/* Mailboxes */}
+            <li>
+              <button
+                onClick={() => setMailboxMenuOpen(!mailboxMenuOpen)}
+                className={`${
+                  pathname.startsWith("/adminv2/mailboxes")
+                    ? "bg-blue-50 border-blue-500 text-blue-700"
+                    : "border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                } group flex items-center w-full px-2 py-2 text-sm font-medium border-l-4 rounded-r-md`}
+              >
+                <InboxIcon className="mr-3 h-5 w-5" />
+                กล่องข้อความ
+                {mailboxMenuOpen ? (
+                  <ChevronDownIcon className="ml-auto h-4 w-4" />
+                ) : (
+                  <ChevronRightIcon className="ml-auto h-4 w-4" />
+                )}
+              </button>
+
+              {mailboxMenuOpen && (
+                <ul className="mt-1 space-y-1">
+                  <li>
+                    <Link
+                      href="/adminv2/mailboxes"
+                      className={`${
+                        isActive("/adminv2/mailboxes")
+                          ? "bg-blue-50 text-blue-700"
+                          : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                      } group flex items-center pl-11 pr-2 py-2 text-sm font-medium`}
+                    >
+                      กล่องข้อความทั้งหมด
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/adminv2/mailboxes/create"
+                      className={`${
+                        isActive("/adminv2/mailboxes/create")
+                          ? "bg-blue-50 text-blue-700"
+                          : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                      } group flex items-center pl-11 pr-2 py-2 text-sm font-medium`}
+                    >
+                      ส่งข้อความใหม่
+                    </Link>
+                  </li>
+                </ul>
+              )}
+            </li>
+
+            {/* Bookings */}
+            <li>
+              <Link
+                href="/adminv2/bookings"
+                className={`${
+                  isActive("/adminv2/bookings") ||
+                  pathname.startsWith("/adminv2/bookings")
+                    ? "bg-blue-50 border-blue-500 text-blue-700"
+                    : "border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                } group flex items-center px-2 py-2 text-sm font-medium border-l-4 rounded-r-md`}
+              >
+                <ClipboardDocumentListIcon className="mr-3 h-5 w-5" />
+                การจอง
+              </Link>
+            </li>
+
+            {/* Billings */}
+            <li>
+              <Link
+                href="/adminv2/billings"
+                className={`${
+                  isActive("/adminv2/billings") ||
+                  pathname.startsWith("/adminv2/billings")
+                    ? "bg-blue-50 border-blue-500 text-blue-700"
+                    : "border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                } group flex items-center px-2 py-2 text-sm font-medium border-l-4 rounded-r-md`}
+              >
+                <CreditCardIcon className="mr-3 h-5 w-5" />
+                บิลการชำระเงิน
+              </Link>
             </li>
           </ul>
         </nav>

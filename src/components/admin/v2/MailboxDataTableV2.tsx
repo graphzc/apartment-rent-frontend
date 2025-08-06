@@ -1,0 +1,316 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { MailboxV2 } from "@/interface/MailboxV2";
+import useDeleteMailboxV2 from "@/api/mailbox/useDeleteMailboxV2";
+import {
+  PencilIcon,
+  EyeIcon,
+  TrashIcon,
+  PlusIcon,
+  CheckCircleIcon,
+  ExclamationTriangleIcon,
+} from "@heroicons/react/24/outline";
+import Swal from "sweetalert2";
+
+interface MailboxDataTableV2Props {
+  data: MailboxV2[];
+  isLoading?: boolean;
+}
+
+const MailboxDataTableV2 = ({ data, isLoading }: MailboxDataTableV2Props) => {
+  const router = useRouter();
+  const deleteMailbox = useDeleteMailboxV2();
+  const [sortField, setSortField] = useState<keyof MailboxV2>("createdAt");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [readFilter, setReadFilter] = useState<"all" | "read" | "unread">(
+    "all"
+  );
+
+  const handleDelete = async (id: string, title: string) => {
+    const result = await Swal.fire({
+      title: "คุณแน่ใจหรือไม่?",
+      text: `คุณกำลังจะลบข้อความ "${title}" การดำเนินการนี้ไม่สามารถยกเลิกได้`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "ใช่, ลบเลย!",
+      cancelButtonText: "ยกเลิก",
+    });
+
+    if (result.isConfirmed) {
+      deleteMailbox.mutate(id);
+    }
+  };
+
+  const handleEdit = (id: string) => {
+    router.push(`/adminv2/mailboxes/edit/${id}`);
+  };
+
+  const handleView = (id: string) => {
+    router.push(`/adminv2/mailboxes/view/${id}`);
+  };
+
+  const handleSort = (field: keyof MailboxV2) => {
+    if (field === sortField) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    } else {
+      setSortField(field);
+      setSortDirection("asc");
+    }
+  };
+
+  const filteredData = data.filter((mailbox) => {
+    const matchesSearch =
+      mailbox.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      mailbox.content.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesReadStatus =
+      readFilter === "all" ||
+      (readFilter === "read" && mailbox.readAt) ||
+      (readFilter === "unread" && !mailbox.readAt);
+
+    return matchesSearch && matchesReadStatus;
+  });
+
+  const sortedData = [...filteredData].sort((a, b) => {
+    const aValue = a[sortField];
+    const bValue = b[sortField];
+
+    if (aValue == null && bValue == null) return 0;
+    if (aValue == null) return 1;
+    if (bValue == null) return -1;
+
+    if (aValue < bValue) return sortDirection === "asc" ? -1 : 1;
+    if (aValue > bValue) return sortDirection === "asc" ? 1 : -1;
+    return 0;
+  });
+
+  const formatDate = (date: Date) => {
+    return new Date(date).toLocaleString("th-TH", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
+  const truncateText = (text: string, maxLength: number) => {
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + "...";
+  };
+
+  return (
+    <div className="bg-white shadow-sm rounded-lg border border-gray-200">
+      {/* Header */}
+      <div className="px-6 py-4 border-b border-gray-200">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+          <h2 className="text-lg font-semibold text-gray-900 mb-4 sm:mb-0">
+            กล่องข้อความ ({data.length})
+          </h2>
+          <button
+            onClick={() => router.push("/adminv2/mailboxes/create")}
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            <PlusIcon className="h-4 w-4 mr-2" />
+            ส่งข้อความใหม่
+          </button>
+        </div>
+      </div>
+
+      {/* Filters */}
+      <div className="px-6 py-4 border-b border-gray-200">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <input
+            type="text"
+            placeholder="ค้นหาข้อความ..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+          <select
+            value={readFilter}
+            onChange={(e) =>
+              setReadFilter(e.target.value as "all" | "read" | "unread")
+            }
+            className="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option value="all">ทุกสถานะ</option>
+            <option value="read">อ่านแล้ว</option>
+            <option value="unread">ยังไม่อ่าน</option>
+          </select>
+        </div>
+      </div>
+
+      {/* Table */}
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                สถานะ
+              </th>
+              <th
+                onClick={() => handleSort("title")}
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+              >
+                <div className="flex items-center space-x-1">
+                  <span>หัวเรื่อง</span>
+                  {sortField === "title" && (
+                    <span className="text-blue-500">
+                      {sortDirection === "asc" ? "↑" : "↓"}
+                    </span>
+                  )}
+                </div>
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                เนื้อหา
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                การจอง
+              </th>
+              <th
+                onClick={() => handleSort("createdAt")}
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+              >
+                <div className="flex items-center space-x-1">
+                  <span>วันที่ส่ง</span>
+                  {sortField === "createdAt" && (
+                    <span className="text-blue-500">
+                      {sortDirection === "asc" ? "↑" : "↓"}
+                    </span>
+                  )}
+                </div>
+              </th>
+              <th
+                onClick={() => handleSort("readAt")}
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+              >
+                <div className="flex items-center space-x-1">
+                  <span>วันที่อ่าน</span>
+                  {sortField === "readAt" && (
+                    <span className="text-blue-500">
+                      {sortDirection === "asc" ? "↑" : "↓"}
+                    </span>
+                  )}
+                </div>
+              </th>
+              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                การดำเนินการ
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {isLoading ? (
+              <tr>
+                <td
+                  colSpan={7}
+                  className="px-6 py-12 text-center text-gray-500"
+                >
+                  <div className="flex items-center justify-center">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                    <span className="ml-2">กำลังโหลด...</span>
+                  </div>
+                </td>
+              </tr>
+            ) : sortedData.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={7}
+                  className="px-6 py-12 text-center text-gray-500"
+                >
+                  {searchTerm || readFilter !== "all"
+                    ? "ไม่พบข้อความที่ตรงกับการค้นหา"
+                    : "ไม่พบข้อความ"}
+                </td>
+              </tr>
+            ) : (
+              sortedData.map((mailbox) => (
+                <tr key={mailbox.id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center">
+                      {mailbox.readAt ? (
+                        <CheckCircleIcon
+                          className="h-5 w-5 text-green-500"
+                          title="อ่านแล้ว"
+                        />
+                      ) : (
+                        <ExclamationTriangleIcon
+                          className="h-5 w-5 text-orange-500"
+                          title="ยังไม่อ่าน"
+                        />
+                      )}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div
+                      className={`text-sm max-w-xs ${
+                        mailbox.readAt
+                          ? "text-gray-900"
+                          : "font-semibold text-gray-900"
+                      }`}
+                    >
+                      {truncateText(mailbox.title, 40)}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="text-sm text-gray-900 max-w-md">
+                      {truncateText(mailbox.content, 80)}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm text-gray-900">
+                      {mailbox.toBookingId}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm text-gray-900">
+                      {formatDate(mailbox.createdAt)}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm text-gray-900">
+                      {mailbox.readAt ? formatDate(mailbox.readAt) : "-"}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <div className="flex items-center justify-end space-x-2">
+                      <button
+                        onClick={() => handleView(mailbox.id)}
+                        className="p-1 text-blue-600 hover:text-blue-900 hover:bg-blue-50 rounded"
+                        title="ดู"
+                      >
+                        <EyeIcon className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => handleEdit(mailbox.id)}
+                        className="p-1 text-yellow-600 hover:text-yellow-900 hover:bg-yellow-50 rounded"
+                        title="แก้ไข"
+                      >
+                        <PencilIcon className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(mailbox.id, mailbox.title)}
+                        className="p-1 text-red-600 hover:text-red-900 hover:bg-red-50 rounded"
+                        title="ลบ"
+                        disabled={deleteMailbox.isPending}
+                      >
+                        <TrashIcon className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
+export default MailboxDataTableV2;
