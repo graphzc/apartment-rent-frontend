@@ -2,6 +2,7 @@ import Billing from "@/interface/Billing";
 import axios from "@/lib/axios.config";
 import { useQuery } from "@tanstack/react-query";
 import { getSession } from "next-auth/react";
+import billingQueryKeys from "./billingQueryKey";
 
 const fetchBillingDetail = async (billingId: string) => {
   const session = await getSession();
@@ -15,7 +16,7 @@ const fetchBillingDetail = async (billingId: string) => {
 
 const useBillingDetail = (billingId: string) => {
   return useQuery<Billing, Error>({
-    queryKey: ["billingDetail", billingId],
+    queryKey: billingQueryKeys.detail(billingId),
     queryFn: () => fetchBillingDetail(billingId),
   });
 };

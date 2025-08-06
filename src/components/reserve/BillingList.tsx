@@ -23,7 +23,13 @@ const BillingList = ({ bookingId, onSelectBilling }: BillingListProps) => {
     {
       name: "ประเภท",
       selector: (row) =>
-        row.type === "FIRST_TIME_BOOKING" ? "จองครั้งแรก" : row.type,
+        row.type === "FIRST_TIME_BOOKING"
+          ? "จองครั้งแรก"
+          : row.type === "UTILITY"
+          ? "ค่าสาธารณูปโภค"
+          : row.type === "MONTHLY_RENT"
+          ? "ค่าเช่ารายเดือน"
+          : "อื่นๆ",
       sortable: true,
       width: "120px",
     },
@@ -72,16 +78,17 @@ const BillingList = ({ bookingId, onSelectBilling }: BillingListProps) => {
         <div className="text-sm">
           <div>{new Date(row.dueDate).toLocaleDateString("th-TH")}</div>
           <div className="text-xs text-gray-500">
-            {new Date(row.dueDate) < new Date() ? (
-              <span className="text-red-600">เกินกำหนด</span>
-            ) : (
-              "ใน " +
-              Math.ceil(
-                (new Date(row.dueDate).getTime() - new Date().getTime()) /
-                  (1000 * 60 * 60 * 24)
-              ) +
-              " วัน"
-            )}
+            {row.status !== "PAID" &&
+              (new Date(row.dueDate) < new Date() ? (
+                <span className="text-red-600">เกินกำหนด</span>
+              ) : (
+                "ใน " +
+                Math.ceil(
+                  (new Date(row.dueDate).getTime() - new Date().getTime()) /
+                    (1000 * 60 * 60 * 24)
+                ) +
+                " วัน"
+              ))}
           </div>
         </div>
       ),
