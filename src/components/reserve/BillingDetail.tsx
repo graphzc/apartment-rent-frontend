@@ -147,11 +147,12 @@ const BillingDetail = ({ billingId, onBack }: BillingDetailProps) => {
                 month: "long",
                 day: "numeric",
               })}
-              {new Date(bill.dueDate) < new Date() && bill.status !== "PAID" && (
-                <span className="ml-2 text-red-600 font-medium">
-                  (เกินกำหนด)
-                </span>
-              )}
+              {new Date(bill.dueDate) < new Date() &&
+                bill.status !== "PAID" && (
+                  <span className="ml-2 text-red-600 font-medium">
+                    (เกินกำหนด)
+                  </span>
+                )}
             </div>
           </div>
 
@@ -191,7 +192,10 @@ const BillingDetail = ({ billingId, onBack }: BillingDetailProps) => {
           </h3>
           <div className="space-y-4">
             {bill.paymentHistory.map((payment, index) => (
-              <div key={payment.id || index} className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+              <div
+                key={payment.id || index}
+                className="bg-gray-50 border border-gray-200 rounded-lg p-4"
+              >
                 <div className="flex justify-between items-start mb-3">
                   <div className="flex-1">
                     <div className="text-sm font-medium text-gray-900 mb-1">
@@ -221,10 +225,12 @@ const BillingDetail = ({ billingId, onBack }: BillingDetailProps) => {
                       : payment.status}
                   </span>
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
                   <div>
-                    <span className="text-xs font-medium text-gray-600">วันที่ส่งสลิป:</span>
+                    <span className="text-xs font-medium text-gray-600">
+                      วันที่ส่งสลิป:
+                    </span>
                     <div className="text-sm text-gray-900">
                       {new Date(payment.createdAt).toLocaleDateString("th-TH", {
                         year: "numeric",
@@ -236,7 +242,9 @@ const BillingDetail = ({ billingId, onBack }: BillingDetailProps) => {
                     </div>
                   </div>
                   <div>
-                    <span className="text-xs font-medium text-gray-600">อัปเดตล่าสุด:</span>
+                    <span className="text-xs font-medium text-gray-600">
+                      อัปเดตล่าสุด:
+                    </span>
                     <div className="text-sm text-gray-900">
                       {new Date(payment.updatedAt).toLocaleDateString("th-TH", {
                         year: "numeric",
@@ -251,7 +259,9 @@ const BillingDetail = ({ billingId, onBack }: BillingDetailProps) => {
 
                 {payment.slipImage && (
                   <div>
-                    <span className="text-xs font-medium text-gray-600 mb-2 block">สลิปการชำระเงิน:</span>
+                    <span className="text-xs font-medium text-gray-600 mb-2 block">
+                      สลิปการชำระเงิน:
+                    </span>
                     <div className="flex items-center space-x-3">
                       <img
                         src={payment.slipImage}

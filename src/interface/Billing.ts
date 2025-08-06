@@ -1,9 +1,9 @@
 interface PaymentHistory {
-  id: string;
-  slipImage: string;
-  status: string;
-  createdAt: Date;
-  updatedAt: Date;
+    id: string;
+    slipImage: string;
+    status: string;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 export default interface Billing {
