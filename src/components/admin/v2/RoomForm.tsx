@@ -3,7 +3,10 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { CreateRoomRequest, UpdateRoomRequest } from "@/interface/requests/RoomV2Request";
+import {
+  CreateRoomRequest,
+  UpdateRoomRequest,
+} from "@/interface/requests/RoomV2Request";
 import { RoomV2 } from "@/interface/RoomV2";
 import useApartmentsV2 from "@/api/apartment/useApartmentsV2";
 
@@ -12,8 +15,14 @@ const schema = yup.object({
   no: yup.string().required("กรุณากรอกหมายเลขห้อง"),
   description: yup.string(),
   apartmentId: yup.string().required("กรุณาเลือกอพาร์ตเมนต์"),
-  monthlyPrice: yup.number().min(0.01, "ราคารายเดือนต้องมากกว่า 0").required("กรุณากรอกราคารายเดือน"),
-  securityDeposit: yup.number().min(0.01, "เงินประกันต้องมากกว่า 0").required("กรุณากรอกเงินประกัน"),
+  monthlyPrice: yup
+    .number()
+    .min(0.01, "ราคารายเดือนต้องมากกว่า 0")
+    .required("กรุณากรอกราคารายเดือน"),
+  securityDeposit: yup
+    .number()
+    .min(0.01, "เงินประกันต้องมากกว่า 0")
+    .required("กรุณากรอกเงินประกัน"),
   address: yup.string().required("กรุณากรอกที่อยู่"),
 });
 
@@ -25,7 +34,8 @@ interface RoomFormProps {
 }
 
 const RoomForm = ({ room, onSubmit, isLoading, mode }: RoomFormProps) => {
-  const { data: apartments, isLoading: isLoadingApartments } = useApartmentsV2();
+  const { data: apartments, isLoading: isLoadingApartments } =
+    useApartmentsV2();
 
   const {
     register,
@@ -56,7 +66,10 @@ const RoomForm = ({ room, onSubmit, isLoading, mode }: RoomFormProps) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Room Number */}
           <div>
-            <label htmlFor="no" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="no"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               หมายเลขห้อง *
             </label>
             <input
@@ -68,12 +81,17 @@ const RoomForm = ({ room, onSubmit, isLoading, mode }: RoomFormProps) => {
               }`}
               placeholder="เช่น 101, A-201"
             />
-            {errors.no && <p className="mt-1 text-sm text-red-600">{errors.no.message}</p>}
+            {errors.no && (
+              <p className="mt-1 text-sm text-red-600">{errors.no.message}</p>
+            )}
           </div>
 
           {/* Apartment Selection */}
           <div>
-            <label htmlFor="apartmentId" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="apartmentId"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               อพาร์ตเมนต์ *
             </label>
             <select
@@ -91,13 +109,20 @@ const RoomForm = ({ room, onSubmit, isLoading, mode }: RoomFormProps) => {
                 </option>
               ))}
             </select>
-            {errors.apartmentId && <p className="mt-1 text-sm text-red-600">{errors.apartmentId.message}</p>}
+            {errors.apartmentId && (
+              <p className="mt-1 text-sm text-red-600">
+                {errors.apartmentId.message}
+              </p>
+            )}
           </div>
         </div>
 
         {/* Address Field */}
         <div>
-          <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="address"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             ที่อยู่ *
           </label>
           <textarea
@@ -109,12 +134,19 @@ const RoomForm = ({ room, onSubmit, isLoading, mode }: RoomFormProps) => {
             }`}
             placeholder="กรอกที่อยู่ของห้องพัก"
           />
-          {errors.address && <p className="mt-1 text-sm text-red-600">{errors.address.message}</p>}
+          {errors.address && (
+            <p className="mt-1 text-sm text-red-600">
+              {errors.address.message}
+            </p>
+          )}
         </div>
 
         {/* Description Field */}
         <div>
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="description"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             รายละเอียด
           </label>
           <textarea
@@ -126,14 +158,21 @@ const RoomForm = ({ room, onSubmit, isLoading, mode }: RoomFormProps) => {
             }`}
             placeholder="กรอกรายละเอียดห้องพัก (ไม่บังคับ)"
           />
-          {errors.description && <p className="mt-1 text-sm text-red-600">{errors.description.message}</p>}
+          {errors.description && (
+            <p className="mt-1 text-sm text-red-600">
+              {errors.description.message}
+            </p>
+          )}
         </div>
 
         {/* Price Fields */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Monthly Price */}
           <div>
-            <label htmlFor="monthlyPrice" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="monthlyPrice"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               ราคารายเดือน (฿) *
             </label>
             <input
@@ -147,12 +186,19 @@ const RoomForm = ({ room, onSubmit, isLoading, mode }: RoomFormProps) => {
               }`}
               placeholder="0.00"
             />
-            {errors.monthlyPrice && <p className="mt-1 text-sm text-red-600">{errors.monthlyPrice.message}</p>}
+            {errors.monthlyPrice && (
+              <p className="mt-1 text-sm text-red-600">
+                {errors.monthlyPrice.message}
+              </p>
+            )}
           </div>
 
           {/* Security Deposit */}
           <div>
-            <label htmlFor="securityDeposit" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="securityDeposit"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               เงินประกัน (฿) *
             </label>
             <input
@@ -166,7 +212,11 @@ const RoomForm = ({ room, onSubmit, isLoading, mode }: RoomFormProps) => {
               }`}
               placeholder="0.00"
             />
-            {errors.securityDeposit && <p className="mt-1 text-sm text-red-600">{errors.securityDeposit.message}</p>}
+            {errors.securityDeposit && (
+              <p className="mt-1 text-sm text-red-600">
+                {errors.securityDeposit.message}
+              </p>
+            )}
           </div>
         </div>
 
@@ -188,7 +238,11 @@ const RoomForm = ({ room, onSubmit, isLoading, mode }: RoomFormProps) => {
                 : "bg-blue-600 hover:bg-blue-700"
             }`}
           >
-            {isLoading ? "กำลังบันทึก..." : mode === "create" ? "เพิ่มห้องพัก" : "อัปเดตห้องพัก"}
+            {isLoading
+              ? "กำลังบันทึก..."
+              : mode === "create"
+              ? "เพิ่มห้องพัก"
+              : "อัปเดตห้องพัก"}
           </button>
         </div>
       </form>

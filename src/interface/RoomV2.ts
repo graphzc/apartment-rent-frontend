@@ -1,6 +1,6 @@
 export enum RoomStatus {
     AVAILABLE = "AVAILABLE",
-    RESERVED = "RESERVED", 
+    RESERVED = "RESERVED",
     RENTED = "RENTED",
     INACTIVE = "INACTIVE"
 }
