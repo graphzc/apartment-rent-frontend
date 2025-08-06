@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import apartmentQueryKeys from "./apartmentQueryKey";
 
 const fetchApartments = async () => {
-    const { data } = await axios.get<Apartment[]>("/apartment");
+    const { data } = await axios.get<Apartment[]>("/apartments");
     return data;
 };
 

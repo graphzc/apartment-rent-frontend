@@ -1,7 +1,7 @@
 import RegisterSchema from "@/interface/RegisterSchema";
 import User from "@/interface/User";
 import axios from "@/lib/axios.config";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 
 const register = async (newUser: RegisterSchema) => {
     const { data } = await axios.post<User>("/auth/register", newUser);

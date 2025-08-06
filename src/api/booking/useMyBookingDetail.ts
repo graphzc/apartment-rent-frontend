@@ -4,21 +4,22 @@ import { useQuery } from "@tanstack/react-query";
 import bookingQueryKeys from "./bookingQueryKey";
 import { getSession } from "next-auth/react";
 
-const fetchBooking = async () => {
+const fetchMyBookingDetail = async (id: string) => {
     const session = await getSession();
-    const { data } = await axios.get<Booking[]>(`/bookings/my`, {
-        headers:{
+    const { data } = await axios.get<Booking>(`/bookings/${id}`, {
+        headers: {
             Authorization: `Bearer ${session?.accessToken}`,
         },
     });
     return data;
 };
 
-const useMyBooking = () => {
+const useMyBookingDetail = (id: string) => {
     return useQuery({
-        queryKey: bookingQueryKeys.my,
-        queryFn: async () => fetchBooking(),
+        queryKey: bookingQueryKeys.myDetail(id),
+        queryFn: async () => fetchMyBookingDetail(id),
+        enabled: !!id,
     });
 };
 
-export default useMyBooking;
+export default useMyBookingDetail;

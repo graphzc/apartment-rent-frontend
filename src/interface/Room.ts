@@ -1,13 +1,11 @@
-import Apartment from "./Apartment";
-import Booking from "./Booking";
-
 export default interface Room {
-    id: number;
+    id: string;
+    apartmentId: string;
     no: string;
-    apartment: Apartment
-    apartmentId: number;
-    booking: Booking[];
-    createdAt?: Date;
-    updatedAt?: Date;
-    price: number;
+    description: string;
+    monthlyPrice: number;
+    securityDeposit: number;
+    status: "AVAILABLE" | "RESERVED" | "BOOKED";
+    createdAt: Date;
+    updatedAt: Date;
 }
