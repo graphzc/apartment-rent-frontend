@@ -1,7 +1,7 @@
 import Room from "./Room";
 
 export default interface Apartment {
-    id: number;
+    id: string;
     name: string;
     description: string;
     plumbingPrice: number;

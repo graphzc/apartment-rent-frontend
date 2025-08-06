@@ -57,7 +57,6 @@ export default interface Booking {
         email: string;
         address: string;
     };
-    billingReference: string;
     price: {
         securityDeposit: number;
         monthlyRent: number;
