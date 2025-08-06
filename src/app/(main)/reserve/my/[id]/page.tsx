@@ -6,6 +6,8 @@ import BillingList from "@/components/reserve/BillingList";
 import BillingDetail from "@/components/reserve/BillingDetail";
 import MailboxList from "@/components/reserve/MailboxList";
 import MailboxDetail from "@/components/reserve/MailboxDetail";
+import UtilityList from "@/components/reserve/UtilityList";
+import UtilityDetail from "@/components/reserve/UtilityDetail";
 import { useParams } from "next/navigation";
 
 export default function MyReserveInfo() {
@@ -17,6 +19,9 @@ export default function MyReserveInfo() {
     null
   );
   const [selectedMailboxId, setSelectedMailboxId] = useState<string | null>(
+    null
+  );
+  const [selectedUtilityId, setSelectedUtilityId] = useState<string | null>(
     null
   );
 
@@ -71,7 +76,18 @@ export default function MyReserveInfo() {
         {/* Content area */}
         <main className="flex-1">
           {tab === "details" && <ReserveInfo id={id} />}
-          {tab === "utilities" && <p>หน้าสาธารณูปโภค กำลังพัฒนา...</p>}
+          {tab === "utilities" &&
+            (selectedUtilityId ? (
+              <UtilityDetail
+                utilityId={selectedUtilityId}
+                onBack={() => setSelectedUtilityId(null)}
+              />
+            ) : (
+              <UtilityList
+                bookingId={id}
+                onSelectUtility={setSelectedUtilityId}
+              />
+            ))}
           {tab === "billing" &&
             (selectedBillingId ? (
               <BillingDetail
