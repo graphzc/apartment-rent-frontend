@@ -26,7 +26,7 @@ const formSchema = yup.object({
   gender: yup
     .string()
     .required("กรุณาเลือกเพศ")
-    .oneOf(["MALE", "FEMAL", "OTHER"], "กรุณาเลือกเพศที่ถูกต้อง"),
+    .oneOf(["MALE", "FEMALE", "OTHER"], "กรุณาเลือกเพศที่ถูกต้อง"),
   password: yup
     .string()
     .required("กรุณากรอกรหัสผ่าน")
