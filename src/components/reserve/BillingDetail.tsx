@@ -90,7 +90,9 @@ const BillingDetail = ({ billingId, onBack }: BillingDetailProps) => {
             <h2 className="text-2xl font-bold text-gray-800">
               ใบแจ้งชำระเงิน {bill.billingReference}
             </h2>
-            <p className="text-sm text-gray-600 mt-1">ผู้ใช้งาน: {bill.userName}</p>
+            <p className="text-sm text-gray-600 mt-1">
+              ผู้ใช้งาน: {bill.userName}
+            </p>
           </div>
           {bill.status === "PAID" && (
             <Link
