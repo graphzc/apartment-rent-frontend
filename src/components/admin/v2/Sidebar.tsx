@@ -15,6 +15,7 @@ import {
   CreditCardIcon,
   Bars3Icon,
   XMarkIcon,
+  WrenchScrewdriverIcon,
 } from "@heroicons/react/24/outline";
 
 interface SidebarProps {
@@ -27,6 +28,7 @@ const Sidebar = ({ children }: SidebarProps) => {
   const [roomMenuOpen, setRoomMenuOpen] = useState(true);
   const [newsMenuOpen, setNewsMenuOpen] = useState(false);
   const [mailboxMenuOpen, setMailboxMenuOpen] = useState(false);
+  const [utilityMenuOpen, setUtilityMenuOpen] = useState(false);
   const pathname = usePathname();
 
   const isActive = (path: string) => pathname === path;
@@ -264,6 +266,55 @@ const Sidebar = ({ children }: SidebarProps) => {
                       } group flex items-center pl-11 pr-2 py-2 text-sm font-medium`}
                     >
                       ส่งข้อความใหม่
+                    </Link>
+                  </li>
+                </ul>
+              )}
+            </li>
+
+            {/* Utilities */}
+            <li>
+              <button
+                onClick={() => setUtilityMenuOpen(!utilityMenuOpen)}
+                className={`${
+                  pathname.startsWith("/adminv2/utilities")
+                    ? "bg-blue-50 border-blue-500 text-blue-700"
+                    : "border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                } group flex items-center w-full px-2 py-2 text-sm font-medium border-l-4 rounded-r-md`}
+              >
+                <WrenchScrewdriverIcon className="mr-3 h-5 w-5" />
+                สาธารณูปโภค
+                {utilityMenuOpen ? (
+                  <ChevronDownIcon className="ml-auto h-4 w-4" />
+                ) : (
+                  <ChevronRightIcon className="ml-auto h-4 w-4" />
+                )}
+              </button>
+
+              {utilityMenuOpen && (
+                <ul className="mt-1 space-y-1">
+                  <li>
+                    <Link
+                      href="/adminv2/utilities"
+                      className={`${
+                        isActive("/adminv2/utilities")
+                          ? "bg-blue-50 text-blue-700"
+                          : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                      } group flex items-center pl-11 pr-2 py-2 text-sm font-medium`}
+                    >
+                      สาธารณูปโภคทั้งหมด
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/adminv2/utilities/create"
+                      className={`${
+                        isActive("/adminv2/utilities/create")
+                          ? "bg-blue-50 text-blue-700"
+                          : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                      } group flex items-center pl-11 pr-2 py-2 text-sm font-medium`}
+                    >
+                      เพิ่มข้อมูลสาธารณูปโภค
                     </Link>
                   </li>
                 </ul>
