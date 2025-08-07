@@ -10,3 +10,52 @@
     @apply bg-blue-500 text-white px-4 py-2 rounded-lg w-full flex justify-center;
   }
 }
+
+/* Print Styles for Receipt */
+@media print {
+  body {
+    font-size: 12pt;
+    line-height: 1.4;
+  }
+  
+  .print\:hidden {
+    display: none !important;
+  }
+  
+  .print\:shadow-none {
+    box-shadow: none !important;
+  }
+  
+  /* Ensure proper page breaks */
+  .print\:page-break-before {
+    page-break-before: always;
+  }
+  
+  .print\:page-break-after {
+    page-break-after: always;
+  }
+  
+  /* Print colors */
+  .print\:text-black {
+    color: black !important;
+  }
+  
+  .print\:bg-transparent {
+    background-color: transparent !important;
+  }
+  
+  /* Receipt specific styles */
+  @page {
+    size: A4;
+    margin: 0.5in;
+  }
+  
+  /* Ensure table borders print */
+  table, th, td {
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    border: 1px solid #000 !important;
+  }
+}

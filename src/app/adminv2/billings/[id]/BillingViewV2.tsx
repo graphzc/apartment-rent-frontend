@@ -3,6 +3,7 @@
 import { useBillingV2 } from "@/api/billing/useBillingV2";
 import { useUpdateBillingStatusV2 } from "@/api/billing/useUpdateBillingStatusV2";
 import BackButton from "@/components/BackButton";
+import Link from "next/link";
 import {
   CalendarIcon,
   UserIcon,
@@ -12,6 +13,7 @@ import {
   CheckCircleIcon,
   XCircleIcon,
   ClockIcon,
+  DocumentArrowDownIcon,
 } from "@heroicons/react/24/outline";
 
 interface BillingViewV2Props {
@@ -129,6 +131,15 @@ const BillingViewV2 = ({ id }: BillingViewV2Props) => {
               <p className="text-gray-600 mt-1">รายละเอียดบิลการชำระเงิน</p>
             </div>
             <div className="flex items-center space-x-4">
+              {billing.status === "PAID" && (
+                <Link
+                  href={`/receipt/${billing.id}`}
+                  className="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+                >
+                  <DocumentArrowDownIcon className="h-5 w-5 mr-2" />
+                  ดูใบเสร็จ
+                </Link>
+              )}
               <span className={`inline-flex items-center px-3 py-2 rounded-full text-sm font-medium ${statusInfo.color}`}>
                 <StatusIcon className="h-4 w-4 mr-1" />
                 {statusInfo.text}

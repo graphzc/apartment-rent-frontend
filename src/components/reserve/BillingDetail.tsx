@@ -3,6 +3,8 @@ import useUploadImage from "@/api/billing/useUploadImage";
 import usePayBilling from "@/api/billing/usePayBilling";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import Link from "next/link";
+import { DocumentArrowDownIcon } from "@heroicons/react/24/outline";
 
 interface BillingDetailProps {
   billingId: string;
@@ -77,16 +79,29 @@ const BillingDetail = ({ billingId, onBack }: BillingDetailProps) => {
     <div className="bg-white shadow-lg rounded-lg p-6">
       {/* Header */}
       <div className="border-b pb-4 mb-6">
-        <button
-          className="text-blue-600 hover:text-blue-800 text-sm mb-2 flex items-center"
-          onClick={onBack}
-        >
-          ← กลับไปที่รายการบิล
-        </button>
-        <h2 className="text-2xl font-bold text-gray-800">
-          ใบแจ้งชำระเงิน {bill.billingReference}
-        </h2>
-        <p className="text-sm text-gray-600 mt-1">ผู้ใช้งาน: {bill.userName}</p>
+        <div className="flex justify-between items-start mb-4">
+          <div className="flex-1">
+            <button
+              className="text-blue-600 hover:text-blue-800 text-sm mb-2 flex items-center"
+              onClick={onBack}
+            >
+              ← กลับไปที่รายการบิล
+            </button>
+            <h2 className="text-2xl font-bold text-gray-800">
+              ใบแจ้งชำระเงิน {bill.billingReference}
+            </h2>
+            <p className="text-sm text-gray-600 mt-1">ผู้ใช้งาน: {bill.userName}</p>
+          </div>
+          {bill.status === "PAID" && (
+            <Link
+              href={`/receipt/${bill.id}`}
+              className="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+            >
+              <DocumentArrowDownIcon className="h-5 w-5 mr-2" />
+              ดูใบเสร็จ
+            </Link>
+          )}
+        </div>
       </div>
 
       {/* Bill Information */}

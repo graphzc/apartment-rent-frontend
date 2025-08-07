@@ -42,7 +42,7 @@ const memberNavigation = [
 
 const adminNavigation = [
   ...memberNavigation,
-  { name: "ระบบจัดการ", href: "/admin/dashboard", current: false },
+  { name: "ระบบจัดการ", href: "/adminv2", current: false },
 ];
 
 function classNames(...classes: string[]) {
