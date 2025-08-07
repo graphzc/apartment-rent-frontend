@@ -7,6 +7,7 @@ import {
   ChartBarIcon,
   UsersIcon,
   CurrencyDollarIcon,
+  BoltIcon,
 } from "@heroicons/react/24/outline";
 
 const AdminV2Dashboard = () => {
@@ -105,9 +106,41 @@ const AdminV2Dashboard = () => {
             <p className="text-sm text-gray-600">จัดการอพาร์ตเมนต์ที่มีอยู่</p>
           </button>
 
+          <button
+            onClick={() => router.push("/adminv2/utilities")}
+            className="p-4 border border-gray-300 rounded-lg hover:bg-gray-50 text-left"
+          >
+            <BoltIcon className="h-8 w-8 text-orange-500 mb-2" />
+            <h3 className="font-medium text-gray-900">จัดการสาธารณูปโภค</h3>
+            <p className="text-sm text-gray-600">
+              ดูและจัดการข้อมูลสาธารณูปโภค
+            </p>
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+          <button
+            onClick={() => router.push("/adminv2/utilities/create")}
+            className="p-4 border border-gray-300 rounded-lg hover:bg-gray-50 text-left"
+          >
+            <BoltIcon className="h-8 w-8 text-purple-500 mb-2" />
+            <h3 className="font-medium text-gray-900">
+              เพิ่มข้อมูลสาธารณูปโภค
+            </h3>
+            <p className="text-sm text-gray-600">
+              เพิ่มข้อมูลการใช้สาธารณูปโภคใหม่
+            </p>
+          </button>
+
           <div className="p-4 border border-gray-300 rounded-lg bg-gray-50 text-left opacity-50">
             <UsersIcon className="h-8 w-8 text-gray-400 mb-2" />
             <h3 className="font-medium text-gray-600">จัดการผู้ใช้</h3>
+            <p className="text-sm text-gray-500">เร็วๆ นี้...</p>
+          </div>
+
+          <div className="p-4 border border-gray-300 rounded-lg bg-gray-50 text-left opacity-50">
+            <CurrencyDollarIcon className="h-8 w-8 text-gray-400 mb-2" />
+            <h3 className="font-medium text-gray-600">จัดการการชำระเงิน</h3>
             <p className="text-sm text-gray-500">เร็วๆ นี้...</p>
           </div>
         </div>

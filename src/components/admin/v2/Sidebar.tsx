@@ -15,6 +15,8 @@ import {
   CreditCardIcon,
   Bars3Icon,
   XMarkIcon,
+  WrenchScrewdriverIcon,
+  UsersIcon,
 } from "@heroicons/react/24/outline";
 
 interface SidebarProps {
@@ -27,6 +29,8 @@ const Sidebar = ({ children }: SidebarProps) => {
   const [roomMenuOpen, setRoomMenuOpen] = useState(true);
   const [newsMenuOpen, setNewsMenuOpen] = useState(false);
   const [mailboxMenuOpen, setMailboxMenuOpen] = useState(false);
+  const [utilityMenuOpen, setUtilityMenuOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const pathname = usePathname();
 
   const isActive = (path: string) => pathname === path;
@@ -45,9 +49,9 @@ const Sidebar = ({ children }: SidebarProps) => {
       <div
         className={`${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0`}
+        } fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 lg:transform-none flex flex-col`}
       >
-        <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200">
+        <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200 flex-shrink-0">
           <h1 className="text-xl font-semibold text-gray-900">ระบบจัดการ v2</h1>
           <button
             onClick={() => setSidebarOpen(false)}
@@ -57,7 +61,7 @@ const Sidebar = ({ children }: SidebarProps) => {
           </button>
         </div>
 
-        <nav className="mt-5 px-2">
+        <nav className="flex-1 overflow-y-auto mt-5 px-2 pb-4">
           <ul className="space-y-1">
             {/* Dashboard */}
             <li>
@@ -264,6 +268,92 @@ const Sidebar = ({ children }: SidebarProps) => {
                       } group flex items-center pl-11 pr-2 py-2 text-sm font-medium`}
                     >
                       ส่งข้อความใหม่
+                    </Link>
+                  </li>
+                </ul>
+              )}
+            </li>
+
+            {/* Utilities */}
+            <li>
+              <button
+                onClick={() => setUtilityMenuOpen(!utilityMenuOpen)}
+                className={`${
+                  pathname.startsWith("/adminv2/utilities")
+                    ? "bg-blue-50 border-blue-500 text-blue-700"
+                    : "border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                } group flex items-center w-full px-2 py-2 text-sm font-medium border-l-4 rounded-r-md`}
+              >
+                <WrenchScrewdriverIcon className="mr-3 h-5 w-5" />
+                สาธารณูปโภค
+                {utilityMenuOpen ? (
+                  <ChevronDownIcon className="ml-auto h-4 w-4" />
+                ) : (
+                  <ChevronRightIcon className="ml-auto h-4 w-4" />
+                )}
+              </button>
+
+              {utilityMenuOpen && (
+                <ul className="mt-1 space-y-1">
+                  <li>
+                    <Link
+                      href="/adminv2/utilities"
+                      className={`${
+                        isActive("/adminv2/utilities")
+                          ? "bg-blue-50 text-blue-700"
+                          : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                      } group flex items-center pl-11 pr-2 py-2 text-sm font-medium`}
+                    >
+                      สาธารณูปโภคทั้งหมด
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/adminv2/utilities/create"
+                      className={`${
+                        isActive("/adminv2/utilities/create")
+                          ? "bg-blue-50 text-blue-700"
+                          : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                      } group flex items-center pl-11 pr-2 py-2 text-sm font-medium`}
+                    >
+                      เพิ่มข้อมูลสาธารณูปโภค
+                    </Link>
+                  </li>
+                </ul>
+              )}
+            </li>
+
+            {/* Users */}
+            <li>
+              <button
+                onClick={() => setUserMenuOpen(!userMenuOpen)}
+                className={`${
+                  pathname.startsWith("/adminv2/users")
+                    ? "bg-blue-50 border-blue-500 text-blue-700"
+                    : "border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                } group flex items-center w-full px-2 py-2 text-sm font-medium border-l-4 rounded-r-md`}
+              >
+                <UsersIcon className="mr-3 h-5 w-5" />
+                จัดการผู้ใช้งาน
+                {userMenuOpen ? (
+                  <ChevronDownIcon className="ml-auto h-4 w-4" />
+                ) : (
+                  <ChevronRightIcon className="ml-auto h-4 w-4" />
+                )}
+              </button>
+
+              {userMenuOpen && (
+                <ul className="mt-1 space-y-1">
+                  <li>
+                    <Link
+                      href="/adminv2/users"
+                      className={`${
+                        isActive("/adminv2/users")
+                          ? "bg-blue-50 text-blue-700"
+                          : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                      } group flex items-center pl-11 pr-2 py-2 text-sm font-medium`}
+                    >
+                      ผู้ใช้งานทั้งหมด
                     </Link>
                   </li>
                 </ul>
