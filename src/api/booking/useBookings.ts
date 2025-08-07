@@ -6,7 +6,7 @@ import { getSession } from "next-auth/react";
 
 const fetchBookings = async () => {
     const session = await getSession();
-    const { data } = await axios.get<Booking[]>("/admin/booking", {
+    const { data } = await axios.get<Booking[]>("/admin/bookings", {
         headers:{
             Authorization: `Bearer ${session?.accessToken}`,
         },

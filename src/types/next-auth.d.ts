@@ -1,4 +1,5 @@
 import { UserRole } from "@/enum/UserRole";
+import { Gender } from "@/enum/Gender";
 import { DefaultSession } from "next-auth";
 import { JWT } from "next-auth/jwt"
 
@@ -16,6 +17,10 @@ declare module 'next-auth' {
     email?: string;
     name?: string;
     role?: UserRole;
+    telephone?: string;
+    age?: number;
+    gender: Gender;
+    role: UserRole;
   }
 }
 

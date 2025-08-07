@@ -53,6 +53,7 @@ export const authOptions: AuthOptions = {
 					return { ...token, ...user };
 				}
 			}
+
 			return { ...token, ...user };
 		},
 		async session({ session, token }: { session: Session, token: JWT }): Promise<Session> {
