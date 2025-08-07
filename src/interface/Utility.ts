@@ -1,10 +1,12 @@
-import Booking from "./Booking";
-
 export default interface Utility {
-    id: number;
-    forMonth: Date;
-    electricity: number;
-    plumbing: number;
-    bookingId: number;
-    booking: Booking;
+    id: string;
+    bookingId: string;
+    billingId: string;
+    plumbingUsage: number;
+    plumbingCharge: number;
+    electricityUsage: number;
+    electricityCharge: number;
+    paidAt?: Date;
+    createdAt: Date;
+    updatedAt: Date;
 }

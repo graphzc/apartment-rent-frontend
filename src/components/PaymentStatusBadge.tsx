@@ -15,7 +15,7 @@ export default function PaymentStatusBadge({ status } : PaymentStatusBadgeProps)
             color = "bg-orange-500";
             break;
         case PaymentStatus.PENDING:
-            color = "bg-yellow-500";
+            color = "bg-yellow-800";
             break;
         case PaymentStatus.REJECTED:
             color = "bg-red-500";

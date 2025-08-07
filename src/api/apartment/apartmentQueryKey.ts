@@ -1,6 +1,6 @@
 const apartmentQueryKeys = {
     all: ['apartment'],
-    detail: (id: number) => [...apartmentQueryKeys.all, id],
+    detail: (id: string) => [...apartmentQueryKeys.all, id],
 };
 
 export default apartmentQueryKeys;

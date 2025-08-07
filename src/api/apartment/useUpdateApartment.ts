@@ -1,14 +1,13 @@
-import Payment from "@/interface/Payment";
+import { UpdateApartmentRequest } from "@/interface/requests/ApartmentRequest";
 import axios from "@/lib/axios.config";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getSession } from "next-auth/react";
 import apartmentQueryKeys from "./apartmentQueryKey";
-import Apartment from "@/interface/Apartment";
 
-const updateApartment = async (apartment: Apartment) => {
+const updateApartment = async ({ id, apartment }: { id: string, apartment: UpdateApartmentRequest }) => {
     const session = await getSession();
 
-    const { data } = await axios.put<Apartment>(`/admin/apartment/${apartment.id}`, apartment, {
+    const { data } = await axios.put(`/admin/apartment/${id}`, apartment, {
         headers: {
             Authorization: `Bearer ${session?.accessToken}`,
         }
@@ -21,7 +20,7 @@ const useUpdateApartment = () => {
 
     return useMutation({
         mutationFn: updateApartment,
-        onSuccess: ( data ) => {
+        onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: apartmentQueryKeys.all });
         },
     });

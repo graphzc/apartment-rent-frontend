@@ -1,27 +1,13 @@
 "use client";
-import useCurrentNews from "@/api/news/useCurrentNews";
-import News from "@/interface/News";
+import useNewsDetail from "@/api/news/useNewsDetail";
 import { thDateTimeString } from "@/utils/thDateConvertor";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
 
 export default function NewsDetail() {
   // get id from params
   const { id } = useParams<{ id: string }>();
 
-  const [filteredNews, setFilteredNews] = useState<News | null>(null);
-  const { data: news, isPending, error } = useCurrentNews();
-
-  useEffect(() => {
-    // Reset filtered news when the component mounts or id changes
-    setFilteredNews(null);
-
-    if (news) {
-      // Filter the news by the current ID
-      const currentNews = news.find((item) => item.id === Number(id));
-      setFilteredNews(currentNews || null);
-    }
-  }, [id, news]);
+  const { data: news, isPending, error } = useNewsDetail(id);
 
   if (isPending) {
     return <div>Loading...</div>;
@@ -29,6 +15,10 @@ export default function NewsDetail() {
 
   if (error) {
     return <div>Error: {error.message}</div>;
+  }
+
+  if (!news) {
+    return <div>No news found</div>;
   }
 
   return (
@@ -43,16 +33,15 @@ export default function NewsDetail() {
         </div>
       </div>
       <div className="container mx-auto mb-44 sm:px-3">
-        {filteredNews ? (
-          <div className="w-100 relative my-16">
-            <h1>{filteredNews.title}</h1>
-            <p>{filteredNews.content}</p>
-            <p className="text-gray-600 text-sm">ถึง {thDateTimeString(filteredNews.createdAt)}</p>
-
+        <div className="w-100 relative my-16">
+          <h1 className="text-3xl font-bold mb-4">{news.title}</h1>
+          <p className="text-gray-600 text-sm mb-6">
+            {thDateTimeString(news.createdAt)}
+          </p>
+          <div className="prose max-w-none">
+            <p className="text-lg leading-relaxed">{news.content}</p>
           </div>
-        ) : (
-          <div>No news found</div>
-        )}
+        </div>
       </div>
     </>
   );
