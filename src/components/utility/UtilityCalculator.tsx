@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { calculateTotalCharge, formatPrice } from "@/utils/utilityCalculator";
+import { formatPrice } from "@/utils/utilityCalculator";
 
 interface UtilityCalculatorProps {
   plumbingUnitPrice?: number;
   electricityUnitPrice?: number;
   defaultPlumbingPrice?: number;
   defaultElectricityPrice?: number;
+  latestPlumbingUsage?: number;
+  latestElectricityUsage?: number;
 }
 
 export default function UtilityCalculator({
@@ -13,9 +15,16 @@ export default function UtilityCalculator({
   electricityUnitPrice,
   defaultPlumbingPrice = 18,
   defaultElectricityPrice = 5,
+  latestPlumbingUsage = 0,
+  latestElectricityUsage = 0,
 }: UtilityCalculatorProps) {
-  const [plumbingUsage, setPlumbingUsage] = useState<number>(0);
-  const [electricityUsage, setElectricityUsage] = useState<number>(0);
+  const [plumbingUsage, setPlumbingUsage] = useState<number>(
+    latestPlumbingUsage || 0
+  );
+  const [electricityUsage, setElectricityUsage] = useState<number>(
+    latestElectricityUsage || 0
+  );
+
   const [customPlumbingPrice, setCustomPlumbingPrice] = useState<number>(
     plumbingUnitPrice || defaultPlumbingPrice
   );
@@ -23,11 +32,15 @@ export default function UtilityCalculator({
     electricityUnitPrice || defaultElectricityPrice
   );
 
-  const plumbingCost = calculateTotalCharge(customPlumbingPrice, plumbingUsage);
-  const electricityCost = calculateTotalCharge(
-    customElectricityPrice,
-    electricityUsage
-  );
+  // latest - current
+  const plumbingCost =
+    plumbingUsage * customPlumbingPrice -
+    latestPlumbingUsage * (plumbingUnitPrice || defaultPlumbingPrice);
+
+  const electricityCost =
+    electricityUsage * customElectricityPrice -
+    latestElectricityUsage * (electricityUnitPrice || defaultElectricityPrice);
+
   const totalCost = plumbingCost + electricityCost;
 
   return (
@@ -42,7 +55,7 @@ export default function UtilityCalculator({
           <h4 className="font-medium text-blue-600">ค่าน้ำประปา</h4>
           <div>
             <label className="block text-sm font-medium text-gray-600 mb-1">
-              ราคาต่อหน่วย (บาท)
+              หน่วยปัจจุบัน
             </label>
             <input
               type="number"
@@ -55,7 +68,7 @@ export default function UtilityCalculator({
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-600 mb-1">
-              จำนวนหน่วยที่ใช้
+              จำนวนหน่วยปัจจุบัน
             </label>
             <input
               type="number"
@@ -97,7 +110,7 @@ export default function UtilityCalculator({
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-600 mb-1">
-              จำนวนหน่วยที่ใช้
+              จำนวนหน่วยปัจจุบัน
             </label>
             <input
               type="number"

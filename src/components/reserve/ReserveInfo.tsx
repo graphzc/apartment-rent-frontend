@@ -224,18 +224,6 @@ export default function ReserveInfo({ id }: ReserveInfoProps) {
               </span>
             </div>
           </div>
-
-          {/* Action Buttons */}
-          {booking.status === BookingStatus.PendingForPayment && (
-            <div className="mt-6 pt-6 border-t">
-              <Link
-                href={`/payment/${booking.id}`}
-                className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                ชำระเงิน
-              </Link>
-            </div>
-          )}
         </div>
       </div>
     </div>

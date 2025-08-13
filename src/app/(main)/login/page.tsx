@@ -47,7 +47,7 @@ export default function LoginPage() {
                             <form onSubmit={handleSubmit(handleLogin)} className="px-8 pt-6 pb-8 mb-4 bg-white rounded mx-auto" >
                                 <div className="mb-4">
                                     <label className="block mb-2 text-sm font-bold text-gray-700" htmlFor="email">
-                                        อิีเมล
+                                        อีเมล
                                     </label>
                                     <input
                                         className="w-full px-4 py-3 text-sm text-gray-700 border rounded appearance-none focus:outline-none focus:shadow-outline"

@@ -1,3 +1,4 @@
+import useMyBookingDetail from "@/api/booking/useMyBookingDetail";
 import useBookingUtility from "@/api/utility/useBookingUtility";
 import BookingUtility from "@/interface/BookingUtility";
 import { thDateString } from "@/utils/thDateConvertor";
@@ -17,14 +18,25 @@ export default function UtilityDetail({
   utilityId,
   onBack,
 }: UtilityDetailProps) {
-  const { data: utility, isLoading, error } = useBookingUtility(utilityId);
+  const { data: utility, isPending, error } = useBookingUtility(utilityId);
+  const {
+    data: booking,
+    isPending: isBookingLoading,
+    error: bookingError,
+  } = useMyBookingDetail(utility?.bookingId || "");
 
-  if (isLoading) {
+  if (isPending || isBookingLoading) {
     return <div>กำลังโหลด...</div>;
   }
 
   if (error) {
     return <div>เกิดข้อผิดพลาด: {error.message}</div>;
+  }
+
+  if (bookingError) {
+    return (
+      <div>เกิดข้อผิดพลาดในการโหลดข้อมูลการจอง: {bookingError.message}</div>
+    );
   }
 
   if (!utility) {
@@ -79,6 +91,15 @@ export default function UtilityDetail({
 
         <div className="border-b pb-4">
           <h3 className="text-lg font-semibold mb-2">ค่าน้ำประปา</h3>
+          {(utility.plumbingUsage === 0 && utility.electricityUsage === 0) ||
+          (utility.plumbingUsage > 0 &&
+            utility.electricityUsage > 0 &&
+            utility.plumbingCharge === 0 &&
+            utility.electricityCharge == 0) ? (
+            <div className="text-gray-500">
+              ค่าดังกล่าวเป็นค่าเริ่มต้น ไม่ได้มีการคิดเงิน
+            </div>
+          ) : null}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <span className="font-medium text-gray-600">จำนวนหน่วย:</span>
@@ -87,7 +108,7 @@ export default function UtilityDetail({
             <div>
               <span className="font-medium text-gray-600">ราคาต่อหน่วย:</span>
               <div className="text-lg text-blue-500">
-                {formatPrice(getPlumbingUnitPrice(utility))} บาท/หน่วย
+                {formatPrice(booking.price.plumbingPrice)} บาท/หน่วย
               </div>
             </div>
             <div>
@@ -97,23 +118,19 @@ export default function UtilityDetail({
               </div>
             </div>
           </div>
-          <div className="mt-3 p-3 bg-blue-50 rounded-lg">
-            <div className="text-sm text-blue-700">
-              <strong>การคำนวณ:</strong> {utility.plumbingUsage} หน่วย ×{" "}
-              {formatPrice(getPlumbingUnitPrice(utility))} บาท/หน่วย ={" "}
-              {formatPrice(
-                calculateTotalCharge(
-                  getPlumbingUnitPrice(utility),
-                  utility.plumbingUsage
-                )
-              )}{" "}
-              บาท
-            </div>
-          </div>
         </div>
 
         <div className="border-b pb-4">
           <h3 className="text-lg font-semibold mb-2">ค่าไฟฟ้า</h3>
+          {(utility.plumbingUsage === 0 && utility.electricityUsage === 0) ||
+          (utility.plumbingUsage > 0 &&
+            utility.electricityUsage > 0 &&
+            utility.plumbingCharge === 0 &&
+            utility.electricityCharge == 0) ? (
+            <div className="text-gray-500">
+              ค่าดังกล่าวเป็นค่าเริ่มต้น ไม่ได้มีการคิดเงิน
+            </div>
+          ) : null}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <span className="font-medium text-gray-600">จำนวนหน่วย:</span>
@@ -122,7 +139,7 @@ export default function UtilityDetail({
             <div>
               <span className="font-medium text-gray-600">ราคาต่อหน่วย:</span>
               <div className="text-lg text-orange-500">
-                {formatPrice(getElectricityUnitPrice(utility))} บาท/หน่วย
+                {formatPrice(booking.price.electricityPrice)} บาท/หน่วย
               </div>
             </div>
             <div>
@@ -130,19 +147,6 @@ export default function UtilityDetail({
               <div className="text-lg font-semibold text-blue-600">
                 {formatPrice(utility.electricityCharge)} บาท
               </div>
-            </div>
-          </div>
-          <div className="mt-3 p-3 bg-orange-50 rounded-lg">
-            <div className="text-sm text-orange-700">
-              <strong>การคำนวณ:</strong> {utility.electricityUsage} หน่วย ×{" "}
-              {formatPrice(getElectricityUnitPrice(utility))} บาท/หน่วย ={" "}
-              {formatPrice(
-                calculateTotalCharge(
-                  getElectricityUnitPrice(utility),
-                  utility.electricityUsage
-                )
-              )}{" "}
-              บาท
             </div>
           </div>
         </div>

@@ -171,7 +171,7 @@ const UtilityForm = ({
               </p>
             )}
             <p className="mt-1 text-sm text-gray-500">
-              กรอกจำนวนหน่วยน้ำที่ใช้
+              กรอกจำนวนหน่วยน้ำประปาปัจจุบัน
             </p>
           </div>
 
@@ -199,7 +199,9 @@ const UtilityForm = ({
                 {errors.electricityUsage.message}
               </p>
             )}
-            <p className="mt-1 text-sm text-gray-500">กรอกจำนวนหน่วยไฟที่ใช้</p>
+            <p className="mt-1 text-sm text-gray-500">
+              กรอกจำนวนหน่วยไฟฟ้าปัจจุบัน
+            </p>
           </div>
         </div>
 

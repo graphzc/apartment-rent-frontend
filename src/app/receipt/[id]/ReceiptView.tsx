@@ -222,10 +222,6 @@ const ReceiptView = ({ id }: ReceiptViewProps) => {
                 <span className="text-gray-600 w-32">ชื่อ:</span>
                 <span className="font-semibold">{billing.userName}</span>
               </div>
-              <div className="flex">
-                <span className="text-gray-600 w-32">รหัสการจอง:</span>
-                <span>{billing.bookingId}</span>
-              </div>
             </div>
           </div>
         </div>
