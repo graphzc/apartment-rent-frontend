@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Utility from "@/interface/Utility";
 import useDeleteAdminUtility from "@/api/utility/useDeleteAdminUtility";
+import useBookingsV2 from "@/api/booking/useBookingsV2";
 import {
   PencilIcon,
   EyeIcon,
@@ -20,9 +21,27 @@ interface UtilityDataTableProps {
 const UtilityDataTable = ({ data, isLoading }: UtilityDataTableProps) => {
   const router = useRouter();
   const deleteUtility = useDeleteAdminUtility();
+  const { data: bookings, isLoading: bookingsLoading } = useBookingsV2();
   const [sortField, setSortField] = useState<keyof Utility>("createdAt");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
   const [searchTerm, setSearchTerm] = useState("");
+
+  // Create a mapping from booking ID to room information
+  const bookingToRoomMap = useMemo(() => {
+    if (!bookings) return {}; 
+
+    const map: { [bookingId: string]: { roomNo: string; roomName?: string } } =
+      {};
+    bookings.forEach((booking) => {
+      if (booking.roomInfo) {
+        map[booking.id] = {
+          roomNo: booking.roomInfo.no || "N/A",
+          roomName: booking.roomInfo.no,
+        };
+      }
+    });
+    return map;
+  }, [bookings]);
 
   const handleDelete = async (id: string) => {
     const result = await Swal.fire({
@@ -58,11 +77,16 @@ const UtilityDataTable = ({ data, isLoading }: UtilityDataTableProps) => {
     }
   };
 
-  const filteredData = data.filter(
-    (utility) =>
+  const filteredData = data.filter((utility) => {
+    const roomInfo = bookingToRoomMap[utility.bookingId];
+    const roomNo = roomInfo?.roomNo || "";
+
+    return (
       utility.bookingId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      utility.billingId.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+      utility.billingId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      roomNo.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  });
 
   const sortedData = [...filteredData].sort((a, b) => {
     const aValue = a[sortField];
@@ -120,7 +144,7 @@ const UtilityDataTable = ({ data, isLoading }: UtilityDataTableProps) => {
       <div className="px-6 py-4 border-b border-gray-200">
         <input
           type="text"
-          placeholder="ค้นหาด้วย Booking ID หรือ Billing ID..."
+          placeholder="ค้นหาด้วย Booking ID, Billing ID หรือ หมายเลขห้อง..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="w-full max-w-md px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -132,6 +156,9 @@ const UtilityDataTable = ({ data, isLoading }: UtilityDataTableProps) => {
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                หมายเลขห้อง
+              </th>
               <th
                 onClick={() => handleSort("bookingId")}
                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
@@ -229,10 +256,10 @@ const UtilityDataTable = ({ data, isLoading }: UtilityDataTableProps) => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {isLoading ? (
+            {isLoading || bookingsLoading ? (
               <tr>
                 <td
-                  colSpan={8}
+                  colSpan={9}
                   className="px-6 py-12 text-center text-gray-500"
                 >
                   <div className="flex items-center justify-center">
@@ -244,7 +271,7 @@ const UtilityDataTable = ({ data, isLoading }: UtilityDataTableProps) => {
             ) : sortedData.length === 0 ? (
               <tr>
                 <td
-                  colSpan={8}
+                  colSpan={9}
                   className="px-6 py-12 text-center text-gray-500"
                 >
                   {searchTerm
@@ -253,71 +280,79 @@ const UtilityDataTable = ({ data, isLoading }: UtilityDataTableProps) => {
                 </td>
               </tr>
             ) : (
-              sortedData.map((utility) => (
-                <tr key={utility.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">
-                      {utility.bookingId}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">
-                      {utility.billingId}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">
-                      {formatUsage(utility.plumbingUsage)}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">
-                      {formatUsage(utility.electricityUsage)}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">
-                      {formatPrice(utility.plumbingCharge)}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">
-                      {formatPrice(utility.electricityCharge)}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-500">
-                      {formatDate(utility.createdAt)}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <div className="flex items-center justify-end space-x-2">
-                      <button
-                        onClick={() => handleView(utility.id)}
-                        className="p-1 text-blue-600 hover:text-blue-900 hover:bg-blue-50 rounded"
-                        title="ดู"
-                      >
-                        <EyeIcon className="h-4 w-4" />
-                      </button>
-                      <button
-                        onClick={() => handleEdit(utility.id)}
-                        className="p-1 text-yellow-600 hover:text-yellow-900 hover:bg-yellow-50 rounded"
-                        title="แก้ไข"
-                      >
-                        <PencilIcon className="h-4 w-4" />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(utility.id)}
-                        className="p-1 text-red-600 hover:text-red-900 hover:bg-red-50 rounded"
-                        title="ลบ"
-                        disabled={deleteUtility.isPending}
-                      >
-                        <TrashIcon className="h-4 w-4" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))
+              sortedData.map((utility) => {
+                const roomInfo = bookingToRoomMap[utility.bookingId];
+                return (
+                  <tr key={utility.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm font-medium text-gray-900">
+                        {roomInfo?.roomNo || "N/A"}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm font-medium text-gray-900">
+                        {utility.bookingId}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">
+                        {utility.billingId}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">
+                        {formatUsage(utility.plumbingUsage)}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">
+                        {formatUsage(utility.electricityUsage)}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">
+                        {formatPrice(utility.plumbingCharge)}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">
+                        {formatPrice(utility.electricityCharge)}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-500">
+                        {formatDate(utility.createdAt)}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <div className="flex items-center justify-end space-x-2">
+                        <button
+                          onClick={() => handleView(utility.id)}
+                          className="p-1 text-blue-600 hover:text-blue-900 hover:bg-blue-50 rounded"
+                          title="ดู"
+                        >
+                          <EyeIcon className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => handleEdit(utility.id)}
+                          className="p-1 text-yellow-600 hover:text-yellow-900 hover:bg-yellow-50 rounded"
+                          title="แก้ไข"
+                        >
+                          <PencilIcon className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(utility.id)}
+                          className="p-1 text-red-600 hover:text-red-900 hover:bg-red-50 rounded"
+                          title="ลบ"
+                          disabled={deleteUtility.isPending}
+                        >
+                          <TrashIcon className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })
             )}
           </tbody>
         </table>

@@ -9,6 +9,7 @@ import {
   ClockIcon,
   XCircleIcon,
   CurrencyDollarIcon,
+  DocumentTextIcon,
 } from "@heroicons/react/24/outline";
 
 interface BookingDataTableV2Props {
@@ -346,13 +347,22 @@ const BookingDataTableV2 = ({ data, isLoading }: BookingDataTableV2Props) => {
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <button
-                      onClick={() => handleView(booking.id)}
-                      className="p-1 text-blue-600 hover:text-blue-900 hover:bg-blue-50 rounded"
-                      title="ดูรายละเอียด"
-                    >
-                      <EyeIcon className="h-4 w-4" />
-                    </button>
+                    <div className="flex items-center justify-end space-x-2">
+                      <button
+                        onClick={() => handleView(booking.id)}
+                        className="p-1 text-blue-600 hover:text-blue-900 hover:bg-blue-50 rounded"
+                        title="ดูรายละเอียด"
+                      >
+                        <EyeIcon className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => router.push(`/contract/${booking.id}`)}
+                        className="p-1 text-green-600 hover:text-green-900 hover:bg-green-50 rounded"
+                        title="ดูสัญญา"
+                      >
+                        <DocumentTextIcon className="h-4 w-4" />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))

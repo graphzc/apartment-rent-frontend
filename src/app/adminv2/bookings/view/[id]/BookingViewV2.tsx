@@ -5,17 +5,18 @@ import { useEffect } from "react";
 import BackButton from "@/components/BackButton";
 import useBookingV2 from "@/api/booking/useBookingV2";
 import Swal from "sweetalert2";
-import { 
-  CheckCircleIcon, 
-  ClockIcon, 
-  XCircleIcon, 
+import {
+  CheckCircleIcon,
+  ClockIcon,
+  XCircleIcon,
   CurrencyDollarIcon,
   HomeIcon,
   UserIcon,
   PhoneIcon,
   EnvelopeIcon,
   MapPinIcon,
-  CalendarDaysIcon
+  CalendarDaysIcon,
+  DocumentTextIcon,
 } from "@heroicons/react/24/outline";
 
 interface BookingViewV2Props {
@@ -32,7 +33,7 @@ const BookingViewV2 = ({ id }: BookingViewV2Props) => {
         title: "เกิดข้อผิดพลาด!",
         text: "ไม่สามารถโหลดข้อมูลการจองได้",
         icon: "error",
-        confirmButtonText: "กลับไปหน้ารายการ"
+        confirmButtonText: "กลับไปหน้ารายการ",
       }).then(() => {
         router.push("/adminv2/bookings");
       });
@@ -147,7 +148,11 @@ const BookingViewV2 = ({ id }: BookingViewV2Props) => {
                 การจอง #{booking.id}
               </h2>
               <div className="flex items-center space-x-2">
-                <span className={`inline-flex items-center px-3 py-1 text-sm font-semibold rounded-full ${getStatusColor(booking.status)}`}>
+                <span
+                  className={`inline-flex items-center px-3 py-1 text-sm font-semibold rounded-full ${getStatusColor(
+                    booking.status
+                  )}`}
+                >
                   {getStatusIcon(booking.status)}
                   <span className="ml-1">{getStatusText(booking.status)}</span>
                 </span>
@@ -164,7 +169,16 @@ const BookingViewV2 = ({ id }: BookingViewV2Props) => {
                 )}
               </div>
             </div>
-            <BackButton href="/adminv2/bookings" />
+            <div className="flex items-center space-x-3">
+              <button
+                onClick={() => router.push(`/contract/${booking.id}`)}
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+              >
+                <DocumentTextIcon className="h-4 w-4 mr-1" />
+                ดูสัญญา
+              </button>
+              <BackButton href="/adminv2/bookings" />
+            </div>
           </div>
         </div>
       </div>
@@ -182,7 +196,9 @@ const BookingViewV2 = ({ id }: BookingViewV2Props) => {
             <div className="flex items-center space-x-3">
               <UserIcon className="h-5 w-5 text-gray-400" />
               <div>
-                <p className="text-sm font-medium text-gray-700">ชื่อ-นามสกุล</p>
+                <p className="text-sm font-medium text-gray-700">
+                  ชื่อ-นามสกุล
+                </p>
                 <p className="text-sm text-gray-900">{booking.userInfo.name}</p>
               </div>
             </div>
@@ -190,21 +206,29 @@ const BookingViewV2 = ({ id }: BookingViewV2Props) => {
               <EnvelopeIcon className="h-5 w-5 text-gray-400" />
               <div>
                 <p className="text-sm font-medium text-gray-700">อีเมล</p>
-                <p className="text-sm text-gray-900">{booking.userInfo.email}</p>
+                <p className="text-sm text-gray-900">
+                  {booking.userInfo.email}
+                </p>
               </div>
             </div>
             <div className="flex items-center space-x-3">
               <PhoneIcon className="h-5 w-5 text-gray-400" />
               <div>
-                <p className="text-sm font-medium text-gray-700">เบอร์โทรศัพท์</p>
-                <p className="text-sm text-gray-900">{booking.userInfo.telephone}</p>
+                <p className="text-sm font-medium text-gray-700">
+                  เบอร์โทรศัพท์
+                </p>
+                <p className="text-sm text-gray-900">
+                  {booking.userInfo.telephone}
+                </p>
               </div>
             </div>
             <div className="flex items-start space-x-3">
               <MapPinIcon className="h-5 w-5 text-gray-400 mt-0.5" />
               <div>
                 <p className="text-sm font-medium text-gray-700">ที่อยู่</p>
-                <p className="text-sm text-gray-900">{booking.userInfo.address}</p>
+                <p className="text-sm text-gray-900">
+                  {booking.userInfo.address}
+                </p>
               </div>
             </div>
           </div>
@@ -221,15 +245,21 @@ const BookingViewV2 = ({ id }: BookingViewV2Props) => {
           <div className="p-6 space-y-4">
             <div>
               <p className="text-sm font-medium text-gray-700">อพาร์ตเมนต์</p>
-              <p className="text-sm text-gray-900">{booking.apartmentInfo.name}</p>
+              <p className="text-sm text-gray-900">
+                {booking.apartmentInfo.name}
+              </p>
             </div>
             <div>
               <p className="text-sm font-medium text-gray-700">หมายเลขห้อง</p>
-              <p className="text-sm text-gray-900 font-semibold">{booking.roomInfo.no}</p>
+              <p className="text-sm text-gray-900 font-semibold">
+                {booking.roomInfo.no}
+              </p>
             </div>
             <div>
               <p className="text-sm font-medium text-gray-700">ที่อยู่ห้อง</p>
-              <p className="text-sm text-gray-900">{booking.roomInfo.address}</p>
+              <p className="text-sm text-gray-900">
+                {booking.roomInfo.address}
+              </p>
             </div>
           </div>
         </div>
@@ -246,12 +276,18 @@ const BookingViewV2 = ({ id }: BookingViewV2Props) => {
         <div className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <p className="text-sm font-medium text-gray-700">วันที่เริ่มต้น</p>
-              <p className="text-lg font-semibold text-gray-900">{formatDateOnly(booking.startDate)}</p>
+              <p className="text-sm font-medium text-gray-700">
+                วันที่เริ่มต้น
+              </p>
+              <p className="text-lg font-semibold text-gray-900">
+                {formatDateOnly(booking.startDate)}
+              </p>
             </div>
             <div>
               <p className="text-sm font-medium text-gray-700">วันที่สิ้นสุด</p>
-              <p className="text-lg font-semibold text-gray-900">{formatDateOnly(booking.endDate)}</p>
+              <p className="text-lg font-semibold text-gray-900">
+                {formatDateOnly(booking.endDate)}
+              </p>
             </div>
           </div>
         </div>
@@ -268,24 +304,38 @@ const BookingViewV2 = ({ id }: BookingViewV2Props) => {
         <div className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div className="text-center p-4 bg-blue-50 rounded-lg">
-              <p className="text-sm font-medium text-blue-700">ค่าเช่ารายเดือน</p>
-              <p className="text-2xl font-bold text-blue-900">{formatPrice(booking.price.monthlyRent)}</p>
+              <p className="text-sm font-medium text-blue-700">
+                ค่าเช่ารายเดือน
+              </p>
+              <p className="text-2xl font-bold text-blue-900">
+                {formatPrice(booking.price.monthlyRent)}
+              </p>
             </div>
             <div className="text-center p-4 bg-green-50 rounded-lg">
               <p className="text-sm font-medium text-green-700">เงินประกัน</p>
-              <p className="text-2xl font-bold text-green-900">{formatPrice(booking.price.securityDeposit)}</p>
+              <p className="text-2xl font-bold text-green-900">
+                {formatPrice(booking.price.securityDeposit)}
+              </p>
             </div>
             <div className="text-center p-4 bg-purple-50 rounded-lg">
-              <p className="text-sm font-medium text-purple-700">ยอดชำระครั้งแรก</p>
-              <p className="text-2xl font-bold text-purple-900">{formatPrice(booking.price.totalFirstPay)}</p>
+              <p className="text-sm font-medium text-purple-700">
+                ยอดชำระครั้งแรก
+              </p>
+              <p className="text-2xl font-bold text-purple-900">
+                {formatPrice(booking.price.totalFirstPay)}
+              </p>
             </div>
             <div className="text-center p-4 bg-orange-50 rounded-lg">
               <p className="text-sm font-medium text-orange-700">ค่าประปา</p>
-              <p className="text-lg font-semibold text-orange-900">{formatPrice(booking.price.plumbingPrice)}</p>
+              <p className="text-lg font-semibold text-orange-900">
+                {formatPrice(booking.price.plumbingPrice)}
+              </p>
             </div>
             <div className="text-center p-4 bg-yellow-50 rounded-lg">
               <p className="text-sm font-medium text-yellow-700">ค่าไฟ</p>
-              <p className="text-lg font-semibold text-yellow-900">{formatPrice(booking.price.electricityPrice)}</p>
+              <p className="text-lg font-semibold text-yellow-900">
+                {formatPrice(booking.price.electricityPrice)}
+              </p>
             </div>
           </div>
         </div>
@@ -294,7 +344,9 @@ const BookingViewV2 = ({ id }: BookingViewV2Props) => {
       {/* Timestamps */}
       <div className="bg-white rounded-lg shadow border border-gray-200">
         <div className="px-6 py-4 border-b border-gray-200">
-          <h3 className="text-lg font-semibold text-gray-900">ข้อมูลการทำรายการ</h3>
+          <h3 className="text-lg font-semibold text-gray-900">
+            ข้อมูลการทำรายการ
+          </h3>
         </div>
         <div className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-500">

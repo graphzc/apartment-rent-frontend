@@ -10,26 +10,21 @@ import {
   CheckCircleIcon,
   HomeIcon,
   CalendarIcon,
-  UserIcon,
-  CurrencyDollarIcon,
 } from "@heroicons/react/24/outline";
+import useBookingV2 from "@/api/booking/useBookingV2";
 
 interface ReceiptViewProps {
   id: string;
 }
 
 const ReceiptView = ({ id }: ReceiptViewProps) => {
-  const { data, isLoading, error } = useUnifiedBilling(id);
+  const { data, isPending, error } = useUnifiedBilling(id);
+  const { data: booking } = useBookingV2(data?.bookingId || "");
   const router = useRouter();
   const printRef = useRef<HTMLDivElement>(null);
 
   const handlePrint = () => {
     window.print();
-  };
-
-  const handleDownload = () => {
-    // For future implementation - could generate PDF
-    alert("ฟีเจอร์ดาวน์โหลด PDF จะเปิดให้ใช้งานเร็วๆ นี้");
   };
 
   const formatCurrency = (amount: number) => {
@@ -75,7 +70,7 @@ const ReceiptView = ({ id }: ReceiptViewProps) => {
     return paymentHistory.find((payment) => payment.status === "PAID");
   };
 
-  if (isLoading) {
+  if (isPending) {
     return (
       <div className="flex items-center justify-center py-12">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
@@ -222,10 +217,11 @@ const ReceiptView = ({ id }: ReceiptViewProps) => {
                 <span className="text-gray-600 w-32">ชื่อ:</span>
                 <span className="font-semibold">{billing.userName}</span>
               </div>
-              <div className="flex">
-                <span className="text-gray-600 w-32">รหัสการจอง:</span>
-                <span>{billing.bookingId}</span>
-              </div>
+            </div>
+            {/* เลขที่ห้อง */}
+            <div className="flex">
+              <span className="text-gray-600 w-32">เลขที่ห้อง:</span>
+              <span className="font-semibold">{booking?.roomInfo.no}</span>
             </div>
           </div>
         </div>

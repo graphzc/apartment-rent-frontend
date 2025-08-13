@@ -193,19 +193,40 @@ export default function ReserveInfo({ id }: ReserveInfoProps) {
 
           {/* Contract Status */}
           <div className="bg-blue-50 p-4 rounded-lg mb-6">
-            <div className="flex items-center">
-              <span className="font-medium text-gray-700">สถานะสัญญา:</span>
-              <span
-                className={`ml-2 px-2 py-1 rounded text-sm ${
-                  booking.isAcceptedContract
-                    ? "bg-green-100 text-green-800"
-                    : "bg-yellow-100 text-yellow-800"
-                }`}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <span className="font-medium text-gray-700">สถานะสัญญา:</span>
+                <span
+                  className={`ml-2 px-2 py-1 rounded text-sm ${
+                    booking.isAcceptedContract
+                      ? "bg-green-100 text-green-800"
+                      : "bg-yellow-100 text-yellow-800"
+                  }`}
+                >
+                  {booking.isAcceptedContract
+                    ? "ยอมรับสัญญาแล้ว"
+                    : "รอการยอมรับสัญญา"}
+                </span>
+              </div>
+              <Link
+                href={`/contract/${booking.id}`}
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
               >
-                {booking.isAcceptedContract
-                  ? "ยอมรับสัญญาแล้ว"
-                  : "รอการยอมรับสัญญา"}
-              </span>
+                <svg
+                  className="h-4 w-4 mr-1"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  />
+                </svg>
+                ดูสัญญา
+              </Link>
             </div>
           </div>
 
@@ -224,18 +245,6 @@ export default function ReserveInfo({ id }: ReserveInfoProps) {
               </span>
             </div>
           </div>
-
-          {/* Action Buttons */}
-          {booking.status === BookingStatus.PendingForPayment && (
-            <div className="mt-6 pt-6 border-t">
-              <Link
-                href={`/payment/${booking.id}`}
-                className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                ชำระเงิน
-              </Link>
-            </div>
-          )}
         </div>
       </div>
     </div>

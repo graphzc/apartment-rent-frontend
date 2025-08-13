@@ -1,12 +1,9 @@
 import useBookingUtilities from "@/api/utility/useBookingUtilities";
 import BookingUtility from "@/interface/BookingUtility";
 import { thDateString } from "@/utils/thDateConvertor";
-import {
-  getPlumbingUnitPrice,
-  getElectricityUnitPrice,
-  formatPrice,
-} from "@/utils/utilityCalculator";
+import { formatPrice } from "@/utils/utilityCalculator";
 import UtilityCalculator from "@/components/utility/UtilityCalculator";
+import useMyBookingDetail from "@/api/booking/useMyBookingDetail";
 
 interface UtilityListProps {
   bookingId: string;
@@ -17,14 +14,25 @@ export default function UtilityList({
   bookingId,
   onSelectUtility,
 }: UtilityListProps) {
-  const { data: utilities, isLoading, error } = useBookingUtilities(bookingId);
+  const { data: utilities, isPending, error } = useBookingUtilities(bookingId);
+  const {
+    data: booking,
+    isPending: isBookingPending,
+    error: bookingError,
+  } = useMyBookingDetail(bookingId || "");
 
-  if (isLoading) {
+  if (isPending || isBookingPending) {
     return <div>กำลังโหลด...</div>;
   }
 
   if (error) {
     return <div>เกิดข้อผิดพลาด: {error.message}</div>;
+  }
+
+  if (bookingError) {
+    return (
+      <div>เกิดข้อผิดพลาดในการโหลดข้อมูลการจอง: {bookingError.message}</div>
+    );
   }
 
   if (!utilities || utilities.length === 0) {
@@ -36,12 +44,22 @@ export default function UtilityList({
       <h2 className="text-2xl font-bold mb-4">รายการสาธารณูปโภค</h2>
       <div className="space-y-4">
         {/* Utility Calculator */}
-      {utilities.length > 0 && (
-        <UtilityCalculator
-          plumbingUnitPrice={getPlumbingUnitPrice(utilities[0])}
-          electricityUnitPrice={getElectricityUnitPrice(utilities[0])}
-        />
-      )}
+        {utilities.length > 0 && (
+          <UtilityCalculator
+            plumbingUnitPrice={booking.price.plumbingPrice}
+            electricityUnitPrice={booking.price.electricityPrice}
+            latestElectricityUsage={
+              utilities.length > 0
+                ? utilities[utilities.length - 1].electricityUsage
+                : 0
+            }
+            latestPlumbingUsage={
+              utilities.length > 0
+                ? utilities[utilities.length - 1].plumbingUsage
+                : 0
+            }
+          />
+        )}
         {utilities.map((utility: BookingUtility) => (
           <div
             key={utility.id}
@@ -60,7 +78,7 @@ export default function UtilityList({
                       {formatPrice(utility.plumbingCharge)} บาท (
                       {utility.plumbingUsage} หน่วย)
                       <div className="text-xs text-blue-500">
-                        @ {formatPrice(getPlumbingUnitPrice(utility))} บาท/หน่วย
+                        @ {formatPrice(booking.price.plumbingPrice)} บาท/หน่วย
                       </div>
                     </div>
                     <div>
@@ -68,7 +86,7 @@ export default function UtilityList({
                       {formatPrice(utility.electricityCharge)} บาท (
                       {utility.electricityUsage} หน่วย)
                       <div className="text-xs text-orange-500">
-                        @ {formatPrice(getElectricityUnitPrice(utility))}{" "}
+                        @ {formatPrice(booking.price.electricityPrice)}{" "}
                         บาท/หน่วย
                       </div>
                     </div>
@@ -102,8 +120,6 @@ export default function UtilityList({
           </div>
         ))}
       </div>
-
-      
     </div>
   );
 }
