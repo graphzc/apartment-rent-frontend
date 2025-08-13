@@ -3,6 +3,7 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { useState, useMemo } from "react";
 import {
   CreateUtilityRequest,
   UpdateUtilityRequest,
@@ -39,11 +40,15 @@ const UtilityForm = ({
   mode,
 }: UtilityFormProps) => {
   const { data: bookings, isLoading: isLoadingBookings } = useBookingsV2();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
+    watch,
   } = useForm<CreateUtilityRequest>({
     resolver: yupResolver(schema),
     defaultValues: {
@@ -52,6 +57,35 @@ const UtilityForm = ({
       electricityUsage: utility?.electricityUsage || 0,
     },
   });
+
+  const selectedBookingId = watch("bookingId");
+
+  // Filter bookings based on search term
+  const filteredBookings = useMemo(() => {
+    if (!bookings) return [];
+    if (!searchTerm) return bookings;
+
+    return bookings.filter((booking) => {
+      const searchText =
+        `${booking.userInfo.name} ${booking.roomInfo.no} ${booking.apartmentInfo.name}`.toLowerCase();
+      return searchText.includes(searchTerm.toLowerCase());
+    });
+  }, [bookings, searchTerm]);
+
+  // Get selected booking display text
+  const selectedBookingText = useMemo(() => {
+    if (!selectedBookingId || !bookings) return "";
+    const booking = bookings.find((b) => b.id === selectedBookingId);
+    return booking
+      ? `${booking.userInfo.name} - ห้อง ${booking.roomInfo.no} (${booking.apartmentInfo.name})`
+      : "";
+  }, [selectedBookingId, bookings]);
+
+  const handleBookingSelect = (bookingId: string) => {
+    setValue("bookingId", bookingId);
+    setIsDropdownOpen(false);
+    setSearchTerm("");
+  };
 
   const handleCancel = () => {
     if (onCancel) {
@@ -100,22 +134,105 @@ const UtilityForm = ({
             การจอง *
           </label>
           {mode === "create" ? (
-            <select
-              id="bookingId"
-              {...register("bookingId")}
-              className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                errors.bookingId ? "border-red-300" : "border-gray-300"
-              }`}
-              disabled={isLoadingBookings}
-            >
-              <option value="">เลือกการจอง</option>
-              {bookings?.map((booking) => (
-                <option key={booking.id} value={booking.id}>
-                  {booking.userInfo.name} - ห้อง {booking.roomInfo.no} (
-                  {booking.apartmentInfo.name})
-                </option>
-              ))}
-            </select>
+            <div className="relative">
+              <input
+                type="text"
+                className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                  errors.bookingId ? "border-red-300" : "border-gray-300"
+                } cursor-pointer`}
+                placeholder="ค้นหาและเลือกการจอง..."
+                value={isDropdownOpen ? searchTerm : selectedBookingText}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  if (!isDropdownOpen) setIsDropdownOpen(true);
+                }}
+                onFocus={() => setIsDropdownOpen(true)}
+                disabled={isLoadingBookings}
+                readOnly={!isDropdownOpen}
+              />
+
+              {/* Hidden input for form registration */}
+              <input type="hidden" {...register("bookingId")} />
+
+              {/* Dropdown arrow */}
+              <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                <svg
+                  className={`w-5 h-5 text-gray-400 transition-transform ${
+                    isDropdownOpen ? "rotate-180" : ""
+                  }`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </div>
+
+              {/* Dropdown menu */}
+              {isDropdownOpen && (
+                <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                  {isLoadingBookings ? (
+                    <div className="px-3 py-2 text-gray-500">
+                      กำลังโหลดข้อมูลการจอง...
+                    </div>
+                  ) : filteredBookings.length === 0 ? (
+                    <div className="px-3 py-2 text-gray-500">
+                      {searchTerm
+                        ? "ไม่พบการจองที่ตรงกับการค้นหา"
+                        : "ไม่มีข้อมูลการจอง"}
+                    </div>
+                  ) : (
+                    <>
+                      {!selectedBookingId && (
+                        <div
+                          className="px-3 py-2 text-gray-400 hover:bg-gray-50 cursor-pointer"
+                          onClick={() => {
+                            handleBookingSelect("");
+                          }}
+                        >
+                          เลือกการจอง
+                        </div>
+                      )}
+                      {filteredBookings.map((booking) => (
+                        <div
+                          key={booking.id}
+                          className={`px-3 py-2 cursor-pointer hover:bg-blue-50 ${
+                            selectedBookingId === booking.id
+                              ? "bg-blue-100 text-blue-800"
+                              : "text-gray-900"
+                          }`}
+                          onClick={() => handleBookingSelect(booking.id)}
+                        >
+                          <div className="font-medium">
+                            {booking.userInfo.name}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            ห้อง {booking.roomInfo.no} (
+                            {booking.apartmentInfo.name})
+                          </div>
+                        </div>
+                      ))}
+                    </>
+                  )}
+                </div>
+              )}
+
+              {/* Click outside to close dropdown */}
+              {isDropdownOpen && (
+                <div
+                  className="fixed inset-0 z-5"
+                  onClick={() => {
+                    setIsDropdownOpen(false);
+                    setSearchTerm("");
+                  }}
+                />
+              )}
+            </div>
           ) : (
             <input
               type="text"
@@ -135,11 +252,6 @@ const UtilityForm = ({
           {mode === "edit" && (
             <p className="mt-1 text-sm text-gray-500">
               การจองไม่สามารถแก้ไขได้
-            </p>
-          )}
-          {isLoadingBookings && mode === "create" && (
-            <p className="mt-1 text-sm text-gray-500">
-              กำลังโหลดข้อมูลการจอง...
             </p>
           )}
         </div>

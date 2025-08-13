@@ -23,7 +23,6 @@ const ReceiptView = ({ id }: ReceiptViewProps) => {
   const router = useRouter();
   const printRef = useRef<HTMLDivElement>(null);
 
-  console.log(data?.bookingId )
   const handlePrint = () => {
     window.print();
   };
