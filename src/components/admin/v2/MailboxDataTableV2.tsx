@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { MailboxV2 } from "@/interface/MailboxV2";
 import useDeleteMailboxV2 from "@/api/mailbox/useDeleteMailboxV2";
+import useHideMailbox from "@/api/mailbox/useHideMailbox";
 import {
   PencilIcon,
   EyeIcon,
@@ -11,6 +12,7 @@ import {
   PlusIcon,
   CheckCircleIcon,
   ExclamationTriangleIcon,
+  EyeSlashIcon,
 } from "@heroicons/react/24/outline";
 import Swal from "sweetalert2";
 
@@ -22,12 +24,21 @@ interface MailboxDataTableV2Props {
 const MailboxDataTableV2 = ({ data, isLoading }: MailboxDataTableV2Props) => {
   const router = useRouter();
   const deleteMailbox = useDeleteMailboxV2();
+  const hideMailboxMutation = useHideMailbox();
   const [sortField, setSortField] = useState<keyof MailboxV2>("createdAt");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
   const [searchTerm, setSearchTerm] = useState("");
   const [readFilter, setReadFilter] = useState<"all" | "read" | "unread">(
     "all"
   );
+  const [showHidden, setShowHidden] = useState(false);
+
+  const handleHideToggle = (id: string, currentHideStatus: boolean) => {
+    hideMailboxMutation.mutate({
+      id,
+      isHideFromUser: !currentHideStatus,
+    });
+  };
 
   const handleDelete = async (id: string, title: string) => {
     const result = await Swal.fire({
@@ -73,7 +84,10 @@ const MailboxDataTableV2 = ({ data, isLoading }: MailboxDataTableV2Props) => {
       (readFilter === "read" && mailbox.readAt) ||
       (readFilter === "unread" && !mailbox.readAt);
 
-    return matchesSearch && matchesReadStatus;
+    // Use the showHidden toggle instead of visibilityFilter for simpler UX
+    const matchesVisibility = showHidden || !mailbox.isHideFromUser;
+
+    return matchesSearch && matchesReadStatus && matchesVisibility;
   });
 
   const sortedData = [...filteredData].sort((a, b) => {
@@ -112,13 +126,26 @@ const MailboxDataTableV2 = ({ data, isLoading }: MailboxDataTableV2Props) => {
           <h2 className="text-lg font-semibold text-gray-900 mb-4 sm:mb-0">
             กล่องข้อความ ({data.length})
           </h2>
-          <button
-            onClick={() => router.push("/adminv2/mailboxes/create")}
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-          >
-            <PlusIcon className="h-4 w-4 mr-2" />
-            ส่งข้อความใหม่
-          </button>
+          <div className="flex items-center space-x-4">
+            <label className="inline-flex items-center">
+              <input
+                type="checkbox"
+                checked={showHidden}
+                onChange={(e) => setShowHidden(e.target.checked)}
+                className="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+              />
+              <span className="ml-2 text-sm text-gray-700">
+                แสดงข้อความที่ซ่อน
+              </span>
+            </label>
+            <button
+              onClick={() => router.push("/adminv2/mailboxes/create")}
+              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              <PlusIcon className="h-4 w-4 mr-2" />
+              ส่งข้อความใหม่
+            </button>
+          </div>
         </div>
       </div>
 
@@ -153,6 +180,9 @@ const MailboxDataTableV2 = ({ data, isLoading }: MailboxDataTableV2Props) => {
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 สถานะ
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                การแสดงผล
               </th>
               <th
                 onClick={() => handleSort("title")}
@@ -208,7 +238,7 @@ const MailboxDataTableV2 = ({ data, isLoading }: MailboxDataTableV2Props) => {
             {isLoading ? (
               <tr>
                 <td
-                  colSpan={7}
+                  colSpan={8}
                   className="px-6 py-12 text-center text-gray-500"
                 >
                   <div className="flex items-center justify-center">
@@ -220,7 +250,7 @@ const MailboxDataTableV2 = ({ data, isLoading }: MailboxDataTableV2Props) => {
             ) : sortedData.length === 0 ? (
               <tr>
                 <td
-                  colSpan={7}
+                  colSpan={8}
                   className="px-6 py-12 text-center text-gray-500"
                 >
                   {searchTerm || readFilter !== "all"
@@ -230,7 +260,12 @@ const MailboxDataTableV2 = ({ data, isLoading }: MailboxDataTableV2Props) => {
               </tr>
             ) : (
               sortedData.map((mailbox) => (
-                <tr key={mailbox.id} className="hover:bg-gray-50">
+                <tr
+                  key={mailbox.id}
+                  className={`hover:bg-gray-50 ${
+                    mailbox.isHideFromUser ? "bg-red-50" : ""
+                  }`}
+                >
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       {mailbox.readAt ? (
@@ -243,6 +278,21 @@ const MailboxDataTableV2 = ({ data, isLoading }: MailboxDataTableV2Props) => {
                           className="h-5 w-5 text-orange-500"
                           title="ยังไม่อ่าน"
                         />
+                      )}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center">
+                      {mailbox.isHideFromUser ? (
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                          <EyeSlashIcon className="h-3 w-3 mr-1" />
+                          ซ่อน
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                          <EyeIcon className="h-3 w-3 mr-1" />
+                          แสดง
+                        </span>
                       )}
                     </div>
                   </td>
@@ -279,6 +329,28 @@ const MailboxDataTableV2 = ({ data, isLoading }: MailboxDataTableV2Props) => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <div className="flex items-center justify-end space-x-2">
+                      <button
+                        onClick={() =>
+                          handleHideToggle(mailbox.id, mailbox.isHideFromUser)
+                        }
+                        disabled={hideMailboxMutation.isPending}
+                        className={`p-1 rounded transition-colors ${
+                          mailbox.isHideFromUser
+                            ? "text-green-600 hover:text-green-900 hover:bg-green-50"
+                            : "text-red-600 hover:text-red-900 hover:bg-red-50"
+                        } disabled:opacity-50`}
+                        title={
+                          mailbox.isHideFromUser
+                            ? "แสดงให้ผู้ใช้"
+                            : "ซ่อนจากผู้ใช้"
+                        }
+                      >
+                        {mailbox.isHideFromUser ? (
+                          <EyeIcon className="h-4 w-4" />
+                        ) : (
+                          <EyeSlashIcon className="h-4 w-4" />
+                        )}
+                      </button>
                       <button
                         onClick={() => handleView(mailbox.id)}
                         className="p-1 text-blue-600 hover:text-blue-900 hover:bg-blue-50 rounded"

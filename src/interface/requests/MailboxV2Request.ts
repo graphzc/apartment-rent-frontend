@@ -10,6 +10,10 @@ export interface UpdateMailboxRequest {
     content: string;
 }
 
+export interface HideMailboxRequest {
+    isHideFromUser: boolean;
+}
+
 export interface MailboxActionResponse {
     message: string;
 }

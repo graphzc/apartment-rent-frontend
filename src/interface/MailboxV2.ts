@@ -6,4 +6,5 @@ export interface MailboxV2 {
     readAt?: Date | null;
     createdAt: Date;
     updatedAt: Date;
+    isHideFromUser: boolean;
 }

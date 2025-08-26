@@ -216,6 +216,9 @@ const BillingDataTableV2 = ({ onBillingSelect }: BillingDataTableV2Props) => {
                   สถานะ
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  วันที่สร้าง
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   กำหนดชำระ
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -254,6 +257,9 @@ const BillingDataTableV2 = ({ onBillingSelect }: BillingDataTableV2Props) => {
                       <option value="PAID">ชำระแล้ว</option>
                       <option value="FAILED">ชำระไม่สำเร็จ</option>
                     </select>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {formatDate(billing.createdAt)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {formatDate(billing.dueDate)}
