@@ -1,7 +1,5 @@
-'use client'
+"use client";
 
 export default function MainPage() {
-  return (
-    <div></div>
-  )
+  return <div></div>;
 }
