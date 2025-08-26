@@ -55,7 +55,7 @@ export default function UtilityCalculator({
           <h4 className="font-medium text-blue-600">ค่าน้ำประปา</h4>
           <div>
             <label className="block text-sm font-medium text-gray-600 mb-1">
-              หน่วยปัจจุบัน
+              ราคาต่อหน่วย (บาท)
             </label>
             <input
               type="number"
