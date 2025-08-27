@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import BackButton from "@/components/BackButton";
 import useBookingV2 from "@/api/booking/useBookingV2";
+import useTerminateBooking from "@/api/booking/useTerminateBooking";
 import Swal from "sweetalert2";
 import {
   CheckCircleIcon,
@@ -17,6 +18,7 @@ import {
   MapPinIcon,
   CalendarDaysIcon,
   DocumentTextIcon,
+  NoSymbolIcon,
 } from "@heroicons/react/24/outline";
 
 interface BookingViewV2Props {
@@ -26,6 +28,7 @@ interface BookingViewV2Props {
 const BookingViewV2 = ({ id }: BookingViewV2Props) => {
   const router = useRouter();
   const { data: booking, isLoading, error } = useBookingV2(id);
+  const terminateBookingMutation = useTerminateBooking();
 
   useEffect(() => {
     if (error) {
@@ -39,6 +42,40 @@ const BookingViewV2 = ({ id }: BookingViewV2Props) => {
       });
     }
   }, [error, router]);
+
+  const handleTerminateBooking = () => {
+    Swal.fire({
+      title: "ยืนยันการยกเลิกการเช่า",
+      text: "คุณต้องการยกเลิกการเช่านี้ใช่หรือไม่? การกระทำนี้ไม่สามารถย้อนกลับได้",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "ใช่, ยกเลิกการเช่า",
+      cancelButtonText: "ยกเลิก",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        terminateBookingMutation.mutate(id, {
+          onSuccess: (data) => {
+            Swal.fire({
+              title: "สำเร็จ!",
+              text: "ยกเลิกการเช่าเรียบร้อยแล้ว",
+              icon: "success",
+              confirmButtonText: "ตกลง",
+            });
+          },
+          onError: (error) => {
+            Swal.fire({
+              title: "เกิดข้อผิดพลาด!",
+              text: "ไม่สามารถยกเลิกการเช่าได้",
+              icon: "error",
+              confirmButtonText: "ตกลง",
+            });
+          },
+        });
+      }
+    });
+  };
 
   const formatDate = (date: Date) => {
     return new Date(date).toLocaleString("th-TH", {
@@ -66,55 +103,43 @@ const BookingViewV2 = ({ id }: BookingViewV2Props) => {
   };
 
   const getStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
-      case "pending":
-      case "pending_for_payment":
+    switch (status) {
+      case "PENDING_FOR_PAYMENT":
         return "bg-yellow-100 text-yellow-800";
-      case "confirmed":
-      case "active":
+      case "SUCCESS":
         return "bg-green-100 text-green-800";
-      case "cancelled":
-      case "rejected":
+      case "CANCELLED":
         return "bg-red-100 text-red-800";
-      case "completed":
-        return "bg-blue-100 text-blue-800";
-      default:
+      case "TERMINATED":
         return "bg-gray-100 text-gray-800";
     }
   };
 
   const getStatusText = (status: string) => {
-    switch (status.toLowerCase()) {
-      case "pending":
-        return "รอดำเนินการ";
-      case "pending_for_payment":
+    switch (status) {
+      case "PENDING_FOR_PAYMENT":
         return "รอชำระเงิน";
-      case "confirmed":
-        return "ยืนยันแล้ว";
-      case "active":
-        return "กำลังใช้งาน";
-      case "cancelled":
+      case "SUCCESS":
+        return "อยู่ในการเช่า";
+      case "CANCELLED":
         return "ยกเลิก";
-      case "rejected":
-        return "ปฏิเสธ";
-      case "completed":
-        return "เสร็จสิ้น";
+      case "TERMINATED":
+        return "สิ้นสุด";
       default:
         return status;
     }
   };
 
   const getStatusIcon = (status: string) => {
-    switch (status.toLowerCase()) {
-      case "confirmed":
-      case "active":
-        return <CheckCircleIcon className="h-5 w-5" />;
-      case "pending":
-      case "pending_for_payment":
-        return <ClockIcon className="h-5 w-5" />;
-      case "cancelled":
-      case "rejected":
-        return <XCircleIcon className="h-5 w-5" />;
+    switch (status) {
+      case "SUCCESS":
+        return <CheckCircleIcon className="h-4 w-4" />;
+      case "PENDING_FOR_PAYMENT":
+        return <ClockIcon className="h-4 w-4" />;
+      case "CANCELLED":
+        return <XCircleIcon className="h-4 w-4" />;
+      case "TERMINATED":
+        return <NoSymbolIcon className="h-4 w-4" />;
       default:
         return null;
     }
@@ -177,6 +202,20 @@ const BookingViewV2 = ({ id }: BookingViewV2Props) => {
                 <DocumentTextIcon className="h-4 w-4 mr-1" />
                 ดูสัญญา
               </button>
+              {booking.status === "SUCCESS" && (
+                <button
+                  onClick={handleTerminateBooking}
+                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                  disabled={terminateBookingMutation.isPending}
+                >
+                  {terminateBookingMutation.isPending ? (
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-1"></div>
+                  ) : (
+                    <NoSymbolIcon className="h-4 w-4 mr-1" />
+                  )}
+                  ยกเลิกการเช่า
+                </button>
+              )}
               <BackButton href="/adminv2/bookings" />
             </div>
           </div>
