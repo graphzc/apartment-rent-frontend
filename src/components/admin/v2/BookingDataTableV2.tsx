@@ -10,6 +10,7 @@ import {
   XCircleIcon,
   CurrencyDollarIcon,
   DocumentTextIcon,
+  NoSymbolIcon,
 } from "@heroicons/react/24/outline";
 
 interface BookingDataTableV2Props {
@@ -41,57 +42,43 @@ const BookingDataTableV2 = ({ data, isLoading }: BookingDataTableV2Props) => {
   };
 
   const getStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
-      case "pending":
-      case "pending_for_payment":
+    switch (status) {
+      case "PENDING_FOR_PAYMENT":
         return "bg-yellow-100 text-yellow-800";
-      case "confirmed":
-      case "active":
+      case "SUCCESS":
         return "bg-green-100 text-green-800";
-      case "cancelled":
-      case "rejected":
+      case "CANCELLED":
         return "bg-red-100 text-red-800";
-      case "completed":
-        return "bg-blue-100 text-blue-800";
-      default:
+      case "TERMINATED":
         return "bg-gray-100 text-gray-800";
     }
   };
 
   const getStatusText = (status: string) => {
-    switch (status.toLowerCase()) {
-      case "pending":
-        return "รอดำเนินการ";
-      case "pending_for_payment":
+    switch (status) {
+      case "PENDING_FOR_PAYMENT":
         return "รอชำระเงิน";
-      case "confirmed":
-        return "ยืนยันแล้ว";
-      case "active":
-        return "กำลังใช้งาน";
-      case "cancelled":
+      case "SUCCESS":
+        return "อยู่ในการเช่า";
+      case "CANCELLED":
         return "ยกเลิก";
-      case "rejected":
-        return "ปฏิเสธ";
-      case "completed":
-        return "เสร็จสิ้น";
-      case "success":
-        return "สำเร็จ";
+      case "TERMINATED":
+        return "สิ้นสุด";
       default:
         return status;
     }
   };
 
   const getStatusIcon = (status: string) => {
-    switch (status.toLowerCase()) {
-      case "confirmed":
-      case "active":
+    switch (status) {
+      case "SUCCESS":
         return <CheckCircleIcon className="h-4 w-4" />;
-      case "pending":
-      case "pending_for_payment":
+      case "PENDING_FOR_PAYMENT":
         return <ClockIcon className="h-4 w-4" />;
-      case "cancelled":
-      case "rejected":
+      case "CANCELLED":
         return <XCircleIcon className="h-4 w-4" />;
+      case "TERMINATED":
+        return <NoSymbolIcon className="h-4 w-4" />;
       default:
         return null;
     }
