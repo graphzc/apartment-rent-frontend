@@ -86,6 +86,7 @@ const BookingDataTableV2 = ({ data, isLoading }: BookingDataTableV2Props) => {
 
   const filteredData = data.filter((booking) => {
     const matchesSearch =
+      booking.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
       booking.userInfo.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       booking.userInfo.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       booking.roomInfo.no.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -134,7 +135,7 @@ const BookingDataTableV2 = ({ data, isLoading }: BookingDataTableV2Props) => {
   };
 
   const uniqueStatuses = Array.from(
-    new Set(data.map((booking) => booking.status))
+    new Set(data.map((booking) => booking.status)),
   );
 
   return (
@@ -174,7 +175,7 @@ const BookingDataTableV2 = ({ data, isLoading }: BookingDataTableV2Props) => {
             value={contractFilter}
             onChange={(e) =>
               setContractFilter(
-                e.target.value as "all" | "accepted" | "pending"
+                e.target.value as "all" | "accepted" | "pending",
               )
             }
             className="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -305,7 +306,7 @@ const BookingDataTableV2 = ({ data, isLoading }: BookingDataTableV2Props) => {
                     <div className="flex items-center">
                       <span
                         className={`inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(
-                          booking.status
+                          booking.status,
                         )}`}
                       >
                         {getStatusIcon(booking.status)}

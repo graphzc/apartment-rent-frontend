@@ -26,19 +26,22 @@ const UtilityDataTable = ({ data, isLoading }: UtilityDataTableProps) => {
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Create a mapping from booking ID to room information
-  const bookingToRoomMap = useMemo(() => {
-    if (!bookings) return {}; 
+  // Create a mapping from booking ID to room and user information
+  const bookingDetailsMap = useMemo(() => {
+    if (!bookings) return {};
 
-    const map: { [bookingId: string]: { roomNo: string; roomName?: string } } =
-      {};
+    const map: { [bookingId: string]: any } = {};
     bookings.forEach((booking) => {
-      if (booking.roomInfo) {
-        map[booking.id] = {
-          roomNo: booking.roomInfo.no || "N/A",
-          roomName: booking.roomInfo.no,
-        };
-      }
+      map[booking.id] = {
+        roomNo: booking.roomInfo?.no || "N/A",
+        userName: booking.userInfo?.name || "N/A",
+        userEmail: booking.userInfo?.email || "N/A",
+        userTelephone: booking.userInfo?.telephone || "N/A",
+        apartmentName: booking.apartmentInfo?.name || "N/A",
+        status: booking.status || "N/A",
+        startDate: booking.startDate,
+        monthlyRent: booking.price?.monthlyRent || 0,
+      };
     });
     return map;
   }, [bookings]);
@@ -78,8 +81,8 @@ const UtilityDataTable = ({ data, isLoading }: UtilityDataTableProps) => {
   };
 
   const filteredData = data.filter((utility) => {
-    const roomInfo = bookingToRoomMap[utility.bookingId];
-    const roomNo = roomInfo?.roomNo || "";
+    const bookingDetails = bookingDetailsMap[utility.bookingId];
+    const roomNo = bookingDetails?.roomNo || "";
 
     return (
       utility.bookingId.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -281,22 +284,117 @@ const UtilityDataTable = ({ data, isLoading }: UtilityDataTableProps) => {
               </tr>
             ) : (
               sortedData.map((utility) => {
-                const roomInfo = bookingToRoomMap[utility.bookingId];
+                const bookingDetails = bookingDetailsMap[utility.bookingId];
                 return (
                   <tr key={utility.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-medium text-gray-900">
-                        {roomInfo?.roomNo || "N/A"}
+                        {bookingDetails?.roomNo || "N/A"}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">
-                        {utility.bookingId}
+                      <div className="relative group">
+                        <button
+                          onClick={() =>
+                            router.push(
+                              `/adminv2/bookings/view/${utility.bookingId}`,
+                            )
+                          }
+                          className="text-sm font-medium text-blue-600 hover:text-blue-900 hover:underline"
+                        >
+                          {utility.bookingId.substring(0, 8)}...
+                        </button>
+                        {bookingDetails && (
+                          <div className="absolute z-10 invisible group-hover:visible bg-gray-900 text-white text-xs rounded-lg p-3 shadow-lg left-0 top-full mt-1 w-64">
+                            <div className="space-y-1">
+                              <div className="font-semibold border-b border-gray-700 pb-1 mb-2">
+                                รายละเอียดการจอง
+                              </div>
+                              <div>
+                                <span className="font-medium">ผู้เช่า:</span>{" "}
+                                {bookingDetails.userName}
+                              </div>
+                              <div>
+                                <span className="font-medium">อีเมล:</span>{" "}
+                                {bookingDetails.userEmail}
+                              </div>
+                              <div>
+                                <span className="font-medium">โทรศัพท์:</span>{" "}
+                                {bookingDetails.userTelephone}
+                              </div>
+                              <div>
+                                <span className="font-medium">ห้อง:</span>{" "}
+                                {bookingDetails.roomNo}
+                              </div>
+                              <div>
+                                <span className="font-medium">
+                                  อพาร์ตเมนต์:
+                                </span>{" "}
+                                {bookingDetails.apartmentName}
+                              </div>
+                              <div>
+                                <span className="font-medium">
+                                  ค่าเช่า/เดือน:
+                                </span>{" "}
+                                {formatPrice(bookingDetails.monthlyRent)}
+                              </div>
+                              <div className="text-yellow-300 mt-2">
+                                คลิกเพื่อดูรายละเอียดเพิ่มเติม
+                              </div>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">
-                        {utility.billingId}
+                      <div className="relative group">
+                        <button
+                          onClick={() =>
+                            router.push(
+                              `/adminv2/billings/view/${utility.billingId}`,
+                            )
+                          }
+                          className="text-sm text-blue-600 hover:text-blue-900 hover:underline"
+                        >
+                          {utility.billingId.substring(0, 8)}...
+                        </button>
+                        <div className="absolute z-10 invisible group-hover:visible bg-gray-900 text-white text-xs rounded-lg p-3 shadow-lg left-0 top-full mt-1 w-64">
+                          <div className="space-y-1">
+                            <div className="font-semibold border-b border-gray-700 pb-1 mb-2">
+                              รายละเอียดบิล
+                            </div>
+                            <div>
+                              <span className="font-medium">Billing ID:</span>{" "}
+                              {utility.billingId}
+                            </div>
+                            <div>
+                              <span className="font-medium">ค่าน้ำ:</span>{" "}
+                              {formatPrice(utility.plumbingCharge)}
+                            </div>
+                            <div>
+                              <span className="font-medium">การใช้น้ำ:</span>{" "}
+                              {formatUsage(utility.plumbingUsage)}
+                            </div>
+                            <div>
+                              <span className="font-medium">ค่าไฟ:</span>{" "}
+                              {formatPrice(utility.electricityCharge)}
+                            </div>
+                            <div>
+                              <span className="font-medium">การใช้ไฟ:</span>{" "}
+                              {formatUsage(utility.electricityUsage)}
+                            </div>
+                            <div>
+                              <span className="font-medium">รวม:</span>{" "}
+                              {formatPrice(
+                                utility.plumbingCharge +
+                                  utility.electricityCharge,
+                              )}
+                            </div>
+                            <div className="text-yellow-300 mt-2">
+                              คลิกเพื่อดูรายละเอียดเพิ่มเติม
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
