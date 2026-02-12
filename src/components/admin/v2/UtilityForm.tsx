@@ -99,9 +99,8 @@ const UtilityForm = ({
     if (mode === "create") {
       onSubmit(data as CreateUtilityRequest);
     } else {
-      // For edit mode, convert to UpdateUtilityRequest
+      // For edit mode, convert to UpdateUtilityRequest (exclude bookingId)
       const updateData: UpdateUtilityRequest = {
-        bookingId: data.bookingId,
         plumbingUsage: data.plumbingUsage,
         electricityUsage: data.electricityUsage,
       };

@@ -5,9 +5,8 @@ export interface CreateUtilityRequest {
 }
 
 export interface UpdateUtilityRequest {
-    bookingId?: string;
-    plumbingUsage?: number;
-    electricityUsage?: number;
+    plumbingUsage: number;
+    electricityUsage: number;
 }
 
 export interface UtilityActionResponse {

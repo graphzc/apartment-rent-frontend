@@ -32,14 +32,12 @@ export default function UtilityCalculator({
     electricityUnitPrice || defaultElectricityPrice
   );
 
-  // latest - current
-  const plumbingCost =
-    plumbingUsage * customPlumbingPrice -
-    latestPlumbingUsage * (plumbingUnitPrice || defaultPlumbingPrice);
+  // Calculate units consumed (current - latest)
+  const plumbingUnitsConsumed = plumbingUsage - latestPlumbingUsage;
+  const plumbingCost = plumbingUnitsConsumed * customPlumbingPrice;
 
-  const electricityCost =
-    electricityUsage * customElectricityPrice -
-    latestElectricityUsage * (electricityUnitPrice || defaultElectricityPrice);
+  const electricityUnitsConsumed = electricityUsage - latestElectricityUsage;
+  const electricityCost = electricityUnitsConsumed * customElectricityPrice;
 
   const totalCost = plumbingCost + electricityCost;
 
@@ -68,15 +66,26 @@ export default function UtilityCalculator({
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-600 mb-1">
-              จำนวนหน่วยปัจจุบัน
+              มิเตอร์เดือนก่อน
+            </label>
+            <input
+              type="number"
+              value={latestPlumbingUsage}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100"
+              readOnly
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-600 mb-1">
+              มิเตอร์เดือนปัจจุบัน
             </label>
             <input
               type="number"
               value={plumbingUsage}
               onChange={(e) => setPlumbingUsage(Number(e.target.value))}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="กรอกจำนวนหน่วย"
-              min={0}
+              placeholder="กรอกมิเตอร์ปัจจุบัน"
+              min={latestPlumbingUsage}
             />
           </div>
           <div className="bg-blue-50 p-3 rounded-md">
@@ -84,8 +93,11 @@ export default function UtilityCalculator({
               <strong>ค่าน้ำ:</strong> {formatPrice(plumbingCost)} บาท
             </div>
             <div className="text-xs text-blue-600 mt-1">
-              {plumbingUsage} หน่วย × {formatPrice(customPlumbingPrice)}{" "}
+              {plumbingUnitsConsumed} หน่วย × {formatPrice(customPlumbingPrice)}{" "}
               บาท/หน่วย
+            </div>
+            <div className="text-xs text-blue-500 mt-1">
+              ({plumbingUsage} - {latestPlumbingUsage} = {plumbingUnitsConsumed} หน่วย)
             </div>
           </div>
         </div>
@@ -110,15 +122,26 @@ export default function UtilityCalculator({
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-600 mb-1">
-              จำนวนหน่วยปัจจุบัน
+              มิเตอร์เดือนก่อน
+            </label>
+            <input
+              type="number"
+              value={latestElectricityUsage}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100"
+              readOnly
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-600 mb-1">
+              มิเตอร์เดือนปัจจุบัน
             </label>
             <input
               type="number"
               value={electricityUsage}
               onChange={(e) => setElectricityUsage(Number(e.target.value))}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-              placeholder="กรอกจำนวนหน่วย"
-              min={0}
+              placeholder="กรอกมิเตอร์ปัจจุบัน"
+              min={latestElectricityUsage}
             />
           </div>
           <div className="bg-orange-50 p-3 rounded-md">
@@ -126,8 +149,11 @@ export default function UtilityCalculator({
               <strong>ค่าไฟ:</strong> {formatPrice(electricityCost)} บาท
             </div>
             <div className="text-xs text-orange-600 mt-1">
-              {electricityUsage} หน่วย × {formatPrice(customElectricityPrice)}{" "}
+              {electricityUnitsConsumed} หน่วย × {formatPrice(customElectricityPrice)}{" "}
               บาท/หน่วย
+            </div>
+            <div className="text-xs text-orange-500 mt-1">
+              ({electricityUsage} - {latestElectricityUsage} = {electricityUnitsConsumed} หน่วย)
             </div>
           </div>
         </div>
@@ -155,8 +181,8 @@ export default function UtilityCalculator({
       <div className="mt-4 text-center">
         <button
           onClick={() => {
-            setPlumbingUsage(0);
-            setElectricityUsage(0);
+            setPlumbingUsage(latestPlumbingUsage);
+            setElectricityUsage(latestElectricityUsage);
             setCustomPlumbingPrice(plumbingUnitPrice || defaultPlumbingPrice);
             setCustomElectricityPrice(
               electricityUnitPrice || defaultElectricityPrice
