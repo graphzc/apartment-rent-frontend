@@ -50,12 +50,12 @@ export default function UtilityList({
             electricityUnitPrice={booking.price.electricityPrice}
             latestElectricityUsage={
               utilities.length > 0
-                ? utilities[utilities.length - 1].electricityUsage
+                ? utilities[0].electricityUsage
                 : 0
             }
             latestPlumbingUsage={
               utilities.length > 0
-                ? utilities[utilities.length - 1].plumbingUsage
+                ? utilities[0].plumbingUsage
                 : 0
             }
           />
