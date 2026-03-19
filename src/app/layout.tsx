@@ -25,7 +25,7 @@ const prompt = Prompt({
 });
 
 export const metadata: Metadata = {
-  title: "House for Rent",
+  title: "ซ้งศรีเจริญ",
   description: "The best house for rent in Thailand",
 };
 
@@ -35,7 +35,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="th">
       <head>
         <PublicEnvScript />
       </head>

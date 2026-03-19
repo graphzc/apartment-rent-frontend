@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import BackButton from "@/components/BackButton";
 import useBookingV2 from "@/api/booking/useBookingV2";
 import useTerminateBooking from "@/api/booking/useTerminateBooking";
+import useCancelBooking from "@/api/booking/useCancelBooking";
 import Swal from "sweetalert2";
 import {
   CheckCircleIcon,
@@ -29,6 +30,7 @@ const BookingViewV2 = ({ id }: BookingViewV2Props) => {
   const router = useRouter();
   const { data: booking, isLoading, error } = useBookingV2(id);
   const terminateBookingMutation = useTerminateBooking();
+  const cancelBookingMutation = useCancelBooking();
 
   useEffect(() => {
     if (error) {
@@ -68,6 +70,40 @@ const BookingViewV2 = ({ id }: BookingViewV2Props) => {
             Swal.fire({
               title: "เกิดข้อผิดพลาด!",
               text: "ไม่สามารถยกเลิกการเช่าได้",
+              icon: "error",
+              confirmButtonText: "ตกลง",
+            });
+          },
+        });
+      }
+    });
+  };
+
+  const handleCancelBooking = () => {
+    Swal.fire({
+      title: "ยืนยันการยกเลิกการจอง",
+      text: "คุณต้องการยกเลิกการจองนี้ใช่หรือไม่? ยกเลิกแล้วสถานะห้องจะกลับมาว่าง",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "ใช่, ยกเลิกการจอง",
+      cancelButtonText: "ยกเลิก",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        cancelBookingMutation.mutate(id, {
+          onSuccess: (data) => {
+            Swal.fire({
+              title: "สำเร็จ!",
+              text: "ยกเลิกการจองเรียบร้อยแล้ว",
+              icon: "success",
+              confirmButtonText: "ตกลง",
+            });
+          },
+          onError: (error) => {
+            Swal.fire({
+              title: "เกิดข้อผิดพลาด!",
+              text: "ไม่สามารถยกเลิกการจองได้",
               icon: "error",
               confirmButtonText: "ตกลง",
             });
@@ -202,6 +238,20 @@ const BookingViewV2 = ({ id }: BookingViewV2Props) => {
                 <DocumentTextIcon className="h-4 w-4 mr-1" />
                 ดูสัญญา
               </button>
+              {booking.status === "PENDING_FOR_PAYMENT" && (
+                <button
+                  onClick={handleCancelBooking}
+                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                  disabled={cancelBookingMutation.isPending}
+                >
+                  {cancelBookingMutation.isPending ? (
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-1"></div>
+                  ) : (
+                    <XCircleIcon className="h-4 w-4 mr-1" />
+                  )}
+                  ยกเลิกการจอง
+                </button>
+              )}
               {booking.status === "SUCCESS" && (
                 <button
                   onClick={handleTerminateBooking}

@@ -168,9 +168,8 @@ const ReceiptView = ({ id }: ReceiptViewProps) => {
             <HomeIcon className="h-12 w-12 text-blue-600" />
             <div>
               <h1 className="text-3xl font-bold text-gray-800">
-                ระบบจัดการอพาร์ทเม้นท์
+                ซ้งศรีเจริญ
               </h1>
-              <p className="text-gray-600">Apartment Management System</p>
             </div>
           </div>
           <div className="bg-green-100 inline-flex items-center px-6 py-2 rounded-full">
