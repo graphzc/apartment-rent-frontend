@@ -211,7 +211,7 @@ const BookingViewV2 = ({ id }: BookingViewV2Props) => {
               <div className="flex items-center space-x-2">
                 <span
                   className={`inline-flex items-center px-3 py-1 text-sm font-semibold rounded-full ${getStatusColor(
-                    booking.status
+                    booking.status,
                   )}`}
                 >
                   {getStatusIcon(booking.status)}

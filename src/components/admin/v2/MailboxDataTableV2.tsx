@@ -29,7 +29,7 @@ const MailboxDataTableV2 = ({ data, isLoading }: MailboxDataTableV2Props) => {
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
   const [searchTerm, setSearchTerm] = useState("");
   const [readFilter, setReadFilter] = useState<"all" | "read" | "unread">(
-    "all"
+    "all",
   );
   const [showHidden, setShowHidden] = useState(false);
 
@@ -179,7 +179,7 @@ const MailboxDataTableV2 = ({ data, isLoading }: MailboxDataTableV2Props) => {
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                สถานะ
+                สถานะการอ่าน
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 การแสดงผล
@@ -267,17 +267,27 @@ const MailboxDataTableV2 = ({ data, isLoading }: MailboxDataTableV2Props) => {
                   }`}
                 >
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
+                    <div className="flex items-center space-x-2">
                       {mailbox.readAt ? (
-                        <CheckCircleIcon
-                          className="h-5 w-5 text-green-500"
-                          title="อ่านแล้ว"
-                        />
+                        <>
+                          <CheckCircleIcon
+                            className="h-5 w-5 text-green-500"
+                            title="อ่านแล้ว"
+                          />
+                          <span className="text-sm text-green-700">
+                            อ่านแล้ว
+                          </span>
+                        </>
                       ) : (
-                        <ExclamationTriangleIcon
-                          className="h-5 w-5 text-orange-500"
-                          title="ยังไม่อ่าน"
-                        />
+                        <>
+                          <ExclamationTriangleIcon
+                            className="h-5 w-5 text-orange-500"
+                            title="ยังไม่อ่าน"
+                          />
+                          <span className="text-sm text-orange-700">
+                            ยังไม่อ่าน
+                          </span>
+                        </>
                       )}
                     </div>
                   </td>

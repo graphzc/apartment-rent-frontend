@@ -117,6 +117,9 @@ export default function RentalContractModal({
             ×
           </button>
         </div>
+        <div className="text-center mb-3">
+          <h1 className="text-2xl font-bold">ซ้งศรีเจริญ</h1>
+        </div>
 
         <div className="space-y-4 text-sm leading-relaxed">
           <div className="text-center mb-6">
@@ -223,11 +226,21 @@ export default function RentalContractModal({
           </div>
 
           <div className="border-t pt-4">
+            <p className="text-center text-red-600">
+              <strong>
+                ผู้เช่าโปรดชำระเงินภายใน 3 วัน
+                <br />
+                (หากผู้เช่าไม่ชำระในระยะเวลาที่กำหนดการจองจะถูกยกเลิก)
+              </strong>
+            </p>
+          </div>
+
+          <div className="border-t pt-4">
             <p className="text-center">
               <strong>
                 สัญญานี้มีผลบังคับใช้ตั้งแต่วันที่{" "}
-                {formatDate(formData.startDate)}{" "}
-                ถึงวันที่ {formatDate(formData.endDate)}
+                {formatDate(formData.startDate)} ถึงวันที่{" "}
+                {formatDate(formData.endDate)}
               </strong>
             </p>
           </div>

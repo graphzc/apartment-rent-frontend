@@ -68,7 +68,10 @@ export default function ConfirmReserve({ id }: ConfirmReserveProps) {
     // Show confirmation dialog before submitting
     const result = await MySwal.fire({
       title: "ยืนยันการจอง",
-      text: "คุณต้องการจองห้องพักนี้หรือไม่?",
+      html: `<p>คุณต้องการจองห้องพักนี้หรือไม่?</p>
+             <p style="color: red;">
+               ผู้เช่าโปรดชำระเงินภายใน 3 วัน <br/>(หากผู้เช่าไม่ชำระในระยะเวลาที่กำหนด การจองจะถูกยกเลิก)
+             </p>`,
       icon: "question",
       showCancelButton: true,
       confirmButtonText: "ยืนยัน",
@@ -91,8 +94,8 @@ export default function ConfirmReserve({ id }: ConfirmReserveProps) {
       // End date = start date + month x duration
       endDate: new Date(
         new Date(data.startDate).setMonth(
-          new Date(data.startDate).getMonth() + data.duration
-        )
+          new Date(data.startDate).getMonth() + data.duration,
+        ),
       ),
       roomId: data.roomId,
     };

@@ -140,9 +140,10 @@ const ContractView = ({ id }: ContractViewProps) => {
           <div className="flex items-center justify-center gap-3 mb-4">
             <HomeIcon className="h-12 w-12 text-blue-600" />
             <div>
-              <h1 className="text-3xl font-bold text-gray-800">
-                ซ้งศรีเจริญ
+              <h1 className="text-2xl font-bold text-gray-800">
+                ระบบจัดการห้องเช่า
               </h1>
+              <h1 className="text-3xl font-bold text-gray-800">ซ้งศรีเจริญ</h1>
             </div>
           </div>
           <div className="bg-blue-100 inline-flex items-center px-6 py-2 rounded-full">
@@ -406,7 +407,6 @@ const ContractView = ({ id }: ContractViewProps) => {
 
         {/* Footer */}
         <div className="pt-6 mt-12">
-
           <div className="text-center mt-8 pt-4 border-t border-gray-200">
             <p className="text-xs text-gray-500">
               สัญญานี้สร้างโดยระบบจัดการอพาร์ทเม้นท์อัตโนมัติ
